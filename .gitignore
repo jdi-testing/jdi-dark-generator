@@ -1,0 +1,10 @@
+*.iml
+.idea/
+target/
+*.zip
+*.exe
+.logs/
+*.xlsx
+allure-results/
+allure-report/
+.allure/
