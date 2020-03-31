@@ -20,7 +20,7 @@ supports chain-of-responsibility pattern to requests with params.
 4. Ready to use, literally
 <br><br>
   **How to use:** <br>
-        1. mvn jaxws:generate <br>
+        1. mvn jaxws:wsimport <br>
         2. create entry point: test/ main ( to fast example I choose second: create class Main somewhere around generated classes)<br>
         3. Copy and paste code to it:<br>
 
