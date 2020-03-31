@@ -41,6 +41,8 @@ supports chain-of-responsibility pattern to requests with params.
 
         });
     } 
+    
+ ![alt_text](https://github.com/jdi-testing/jdi-dark-generator/blob/soap_generator_investigating/jdi-dark-soap-generator/Capture.PNG)
 <br><br>
   **What should be improved (how to connect with jdi-dark):**<br><br>
       1. WSimport generates it's own architecture for client: service class (service initialization) and SOAPService interface(here placed @WebMethod to make requests - ***should be improved to connect with Jdi-dark SOAP architecture, my thoughts***:
