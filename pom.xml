@@ -47,5 +47,6 @@
     <modules>
         <module>jdi-dark-rest-generartor</module>
         <module>jdi-dark-soap-generator</module>
+        <module>jdi-dark-rest-generartor-inherited</module>
     </modules>
 </project>
