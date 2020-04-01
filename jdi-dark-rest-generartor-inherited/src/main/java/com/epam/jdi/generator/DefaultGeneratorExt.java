@@ -2,6 +2,7 @@ package com.epam.jdi.generator;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+import io.swagger.codegen.*;
 import io.swagger.models.*;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.util.Json;
@@ -9,36 +10,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
 
-public class DefaultGenerator extends AbstractGenerator {
-    protected final Logger LOGGER = LoggerFactory.getLogger(DefaultGenerator.class);
-    protected CodegenConfig config;
+public class DefaultGeneratorExt extends DefaultGenerator {
     protected CodegenConfigurator opts;
-    protected Swagger swagger;
-    protected Boolean isGenerateApis = null;
-    protected Boolean isGenerateModels = null;
-    protected Boolean isGenerateSupportingFiles = null;
-    protected Boolean isGenerateApiTests = null;
-    protected String basePath;
-    protected String basePathWithoutHost;
-    protected String contextPath;
-    private Map<String, String> generatorPropertyDefaults = new HashMap<>();
-
-    protected Boolean getGeneratorPropertyDefaultSwitch(final String key, final Boolean defaultValue) {
-        String result = null;
-        if (this.generatorPropertyDefaults.containsKey(key)) {
-            result = this.generatorPropertyDefaults.get(key);
-        }
-        if (result != null) {
-            return Boolean.valueOf(result);
-        }
-        return defaultValue;
-    }
+    protected CodegenConfigExt config;
 
     protected String getScheme() {
         String scheme;
@@ -300,18 +278,181 @@ public class DefaultGenerator extends AbstractGenerator {
 
     }
 
+    public Map<String, List<CodegenOperationExt>> processPathsExt(Map<String, Path> paths) {
+        Map<String, List<CodegenOperationExt>> ops = new TreeMap<>();
+        for (String resourcePath : paths.keySet()) {
+            Path path = paths.get(resourcePath);
+            processOperationExt(resourcePath, "get", path.getGet(), ops, path);
+            processOperationExt(resourcePath, "head", path.getHead(), ops, path);
+            processOperationExt(resourcePath, "put", path.getPut(), ops, path);
+            processOperationExt(resourcePath, "post", path.getPost(), ops, path);
+            processOperationExt(resourcePath, "delete", path.getDelete(), ops, path);
+            processOperationExt(resourcePath, "patch", path.getPatch(), ops, path);
+            processOperationExt(resourcePath, "options", path.getOptions(), ops, path);
+        }
+        return ops;
+    }
+
+    protected void processOperationExt(String resourcePath, String httpMethod, Operation operation, Map<String, List<CodegenOperationExt>> operations, Path path) {
+        if (operation == null) {
+            return;
+        }
+        if (System.getProperty("debugOperations") != null) {
+            LOGGER.info("processOperation: resourcePath= " + resourcePath + "\t;" + httpMethod + " " + operation + "\n");
+        }
+        List<Tag> tags = new ArrayList<Tag>();
+
+        List<String> tagNames = operation.getTags();
+        List<Tag> swaggerTags = swagger.getTags();
+        if (tagNames != null) {
+            if (swaggerTags == null) {
+                for (String tagName : tagNames) {
+                    tags.add(new Tag().name(tagName));
+                }
+            } else {
+                for (String tagName : tagNames) {
+                    boolean foundTag = false;
+                    for (Tag tag : swaggerTags) {
+                        if (tag.getName().equals(tagName)) {
+                            tags.add(tag);
+                            foundTag = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundTag) {
+                        tags.add(new Tag().name(tagName));
+                    }
+                }
+            }
+        }
+
+        if (tags.isEmpty()) {
+            tags.add(new Tag().name("default"));
+        }
+
+        /*
+         build up a set of parameter "ids" defined at the operation level
+         per the swagger 2.0 spec "A unique parameter is defined by a combination of a name and location"
+          i'm assuming "location" == "in"
+        */
+        Set<String> operationParameters = new HashSet<String>();
+        if (operation.getParameters() != null) {
+            for (Parameter parameter : operation.getParameters()) {
+                operationParameters.add(generateParameterId(parameter));
+            }
+        }
+
+        //need to propagate path level down to the operation
+        if (path.getParameters() != null) {
+            for (Parameter parameter : path.getParameters()) {
+                //skip propagation if a parameter with the same name is already defined at the operation level
+                if (!operationParameters.contains(generateParameterId(parameter))) {
+                    operation.addParameter(parameter);
+                }
+            }
+        }
+
+        for (Tag tag : tags) {
+            try {
+                CodegenOperationExt codegenOperation = config.fromOperationExt(resourcePath, httpMethod, operation, swagger.getDefinitions(), swagger);
+                codegenOperation.tags = new ArrayList<Tag>(tags);
+                config.addOperationToGroupExt(config.sanitizeTag(tag.getName()), resourcePath, operation, codegenOperation, operations);
+
+                List<Map<String, List<String>>> securities = operation.getSecurity();
+                if (securities == null && swagger.getSecurity() != null) {
+                    securities = new ArrayList<Map<String, List<String>>>();
+                    for (SecurityRequirement sr : swagger.getSecurity()) {
+                        securities.add(sr.getRequirements());
+                    }
+                }
+            } catch (Exception ex) {
+                String msg = "Could not process operation:\n" //
+                        + "  Tag: " + tag + "\n"//
+                        + "  Operation: " + operation.getOperationId() + "\n" //
+                        + "  Resource: " + httpMethod + " " + resourcePath + "\n"//
+                        + "  Definitions: " + swagger.getDefinitions() + "\n"  //
+                        + "  Exception: " + ex.getMessage();
+                throw new RuntimeException(msg, ex);
+            }
+        }
+
+    }
+
+    protected Map<String, Object> processOperations(CodegenConfigExt config, String tag, List<CodegenOperationExt> ops, List<Object> allModels) {
+        Map<String, Object> operations = new HashMap<String, Object>();
+        Map<String, Object> objs = new HashMap<String, Object>();
+        objs.put("classname", config.toApiName(tag));
+        objs.put("pathPrefix", config.toApiVarName(tag));
+
+        // check for operationId uniqueness
+        Set<String> opIds = new HashSet<String>();
+        int counter = 0;
+        for (CodegenOperation op : ops) {
+            String opId = op.nickname;
+            if (opIds.contains(opId)) {
+                counter++;
+                op.nickname += "_" + counter;
+            }
+            opIds.add(opId);
+        }
+        objs.put("operation", ops);
+
+        operations.put("operations", objs);
+        operations.put("package", config.apiPackage());
+
+
+        Set<String> allImports = new TreeSet<String>();
+        for (CodegenOperation op : ops) {
+            allImports.addAll(op.imports);
+        }
+
+        List<Map<String, String>> imports = new ArrayList<Map<String, String>>();
+        for (String nextImport : allImports) {
+            Map<String, String> im = new LinkedHashMap<String, String>();
+            String mapping = config.importMapping().get(nextImport);
+            if (mapping == null) {
+                mapping = config.toModelImport(nextImport);
+            }
+            if (mapping != null) {
+                im.put("import", mapping);
+                if (!imports.contains(im)) { // avoid duplicates
+                    imports.add(im);
+                }
+            }
+        }
+
+        operations.put("imports", imports);
+
+        // add a flag to indicate whether there's any {{import}}
+        if (imports.size() > 0) {
+            operations.put("hasImport", true);
+        }
+        config.postProcessOperations(operations);
+        config.postProcessOperationsWithModels(operations, allModels);
+        if (objs.size() > 0) {
+            List<CodegenOperation> os = (List<CodegenOperation>) objs.get("operation");
+
+            if (os != null && os.size() > 0) {
+                CodegenOperation op = os.get(os.size() - 1);
+                op.hasMore = false;
+            }
+        }
+        return operations;
+    }
+
     protected void generateApis(List<File> files, List<Object> allOperations, List<Object> allModels) {
         if (!isGenerateApis) {
             return;
         }
-        Map<String, List<CodegenOperation>> paths = processPaths(swagger.getPaths());
+        Map<String, List<CodegenOperationExt>> paths = processPathsExt(swagger.getPaths());
         Set<String> apisToGenerate = null;
         String apiNames = System.getProperty("apis");
         if (apiNames != null && !apiNames.isEmpty()) {
             apisToGenerate = new HashSet<String>(Arrays.asList(apiNames.split(",")));
         }
         if (apisToGenerate != null && !apisToGenerate.isEmpty()) {
-            Map<String, List<CodegenOperation>> updatedPaths = new TreeMap<String, List<CodegenOperation>>();
+            Map<String, List<CodegenOperationExt>> updatedPaths = new TreeMap<String, List<CodegenOperationExt>>();
             for (String m : paths.keySet()) {
                 if (apisToGenerate.contains(m)) {
                     updatedPaths.put(m, paths.get(m));
@@ -321,10 +462,10 @@ public class DefaultGenerator extends AbstractGenerator {
         }
         for (String tag : paths.keySet()) {
             try {
-                List<CodegenOperation> ops = paths.get(tag);
-                Collections.sort(ops, new Comparator<CodegenOperation>() {
+                List<CodegenOperationExt> ops = paths.get(tag);
+                Collections.sort(ops, new Comparator<CodegenOperationExt>() {
                     @Override
-                    public int compare(CodegenOperation one, CodegenOperation another) {
+                    public int compare(CodegenOperationExt one, CodegenOperationExt another) {
                         return ObjectUtils.compare(one.operationId, another.operationId);
                     }
                 });
@@ -565,176 +706,7 @@ public class DefaultGenerator extends AbstractGenerator {
         return new File(adjustedOutputFilename);
     }
 
-    public Map<String, List<CodegenOperation>> processPaths(Map<String, Path> paths) {
-        Map<String, List<CodegenOperation>> ops = new TreeMap<String, List<CodegenOperation>>();
-        for (String resourcePath : paths.keySet()) {
-            Path path = paths.get(resourcePath);
-            processOperation(resourcePath, "get", path.getGet(), ops, path);
-            processOperation(resourcePath, "head", path.getHead(), ops, path);
-            processOperation(resourcePath, "put", path.getPut(), ops, path);
-            processOperation(resourcePath, "post", path.getPost(), ops, path);
-            processOperation(resourcePath, "delete", path.getDelete(), ops, path);
-            processOperation(resourcePath, "patch", path.getPatch(), ops, path);
-            processOperation(resourcePath, "options", path.getOptions(), ops, path);
-        }
-        return ops;
-    }
-
-    protected void processOperation(String resourcePath, String httpMethod, Operation operation, Map<String, List<CodegenOperation>> operations, Path path) {
-        if (operation == null) {
-            return;
-        }
-        if (System.getProperty("debugOperations") != null) {
-            LOGGER.info("processOperation: resourcePath= " + resourcePath + "\t;" + httpMethod + " " + operation + "\n");
-        }
-        List<Tag> tags = new ArrayList<Tag>();
-
-        List<String> tagNames = operation.getTags();
-        List<Tag> swaggerTags = swagger.getTags();
-        if (tagNames != null) {
-            if (swaggerTags == null) {
-                for (String tagName : tagNames) {
-                    tags.add(new Tag().name(tagName));
-                }
-            } else {
-                for (String tagName : tagNames) {
-                    boolean foundTag = false;
-                    for (Tag tag : swaggerTags) {
-                        if (tag.getName().equals(tagName)) {
-                            tags.add(tag);
-                            foundTag = true;
-                            break;
-                        }
-                    }
-
-                    if (!foundTag) {
-                        tags.add(new Tag().name(tagName));
-                    }
-                }
-            }
-        }
-
-        if (tags.isEmpty()) {
-            tags.add(new Tag().name("default"));
-        }
-
-        /*
-         build up a set of parameter "ids" defined at the operation level
-         per the swagger 2.0 spec "A unique parameter is defined by a combination of a name and location"
-          i'm assuming "location" == "in"
-        */
-        Set<String> operationParameters = new HashSet<String>();
-        if (operation.getParameters() != null) {
-            for (Parameter parameter : operation.getParameters()) {
-                operationParameters.add(generateParameterId(parameter));
-            }
-        }
-
-        //need to propagate path level down to the operation
-        if (path.getParameters() != null) {
-            for (Parameter parameter : path.getParameters()) {
-                //skip propagation if a parameter with the same name is already defined at the operation level
-                if (!operationParameters.contains(generateParameterId(parameter))) {
-                    operation.addParameter(parameter);
-                }
-            }
-        }
-
-        for (Tag tag : tags) {
-            try {
-                CodegenOperation codegenOperation = config.fromOperation(resourcePath, httpMethod, operation, swagger.getDefinitions(), swagger);
-                codegenOperation.tags = new ArrayList<Tag>(tags);
-                config.addOperationToGroup(config.sanitizeTag(tag.getName()), resourcePath, operation, codegenOperation, operations);
-
-                List<Map<String, List<String>>> securities = operation.getSecurity();
-                if (securities == null && swagger.getSecurity() != null) {
-                    securities = new ArrayList<Map<String, List<String>>>();
-                    for (SecurityRequirement sr : swagger.getSecurity()) {
-                        securities.add(sr.getRequirements());
-                    }
-                }
-            } catch (Exception ex) {
-                String msg = "Could not process operation:\n" //
-                        + "  Tag: " + tag + "\n"//
-                        + "  Operation: " + operation.getOperationId() + "\n" //
-                        + "  Resource: " + httpMethod + " " + resourcePath + "\n"//
-                        + "  Definitions: " + swagger.getDefinitions() + "\n"  //
-                        + "  Exception: " + ex.getMessage();
-                throw new RuntimeException(msg, ex);
-            }
-        }
-
-    }
-
-    protected static String generateParameterId(Parameter parameter) {
-        return parameter.getName() + ":" + parameter.getIn();
-    }
-
-
-    protected Map<String, Object> processOperations(CodegenConfig config, String tag, List<CodegenOperation> ops, List<Object> allModels) {
-        Map<String, Object> operations = new HashMap<String, Object>();
-        Map<String, Object> objs = new HashMap<String, Object>();
-        objs.put("classname", config.toApiName(tag));
-        objs.put("pathPrefix", config.toApiVarName(tag));
-
-        // check for operationId uniqueness
-        Set<String> opIds = new HashSet<String>();
-        int counter = 0;
-        for (CodegenOperation op : ops) {
-            String opId = op.nickname;
-            if (opIds.contains(opId)) {
-                counter++;
-                op.nickname += "_" + counter;
-            }
-            opIds.add(opId);
-        }
-        objs.put("operation", ops);
-
-        operations.put("operations", objs);
-        operations.put("package", config.apiPackage());
-
-
-        Set<String> allImports = new TreeSet<String>();
-        for (CodegenOperation op : ops) {
-            allImports.addAll(op.imports);
-        }
-
-        List<Map<String, String>> imports = new ArrayList<Map<String, String>>();
-        for (String nextImport : allImports) {
-            Map<String, String> im = new LinkedHashMap<String, String>();
-            String mapping = config.importMapping().get(nextImport);
-            if (mapping == null) {
-                mapping = config.toModelImport(nextImport);
-            }
-            if (mapping != null) {
-                im.put("import", mapping);
-                if (!imports.contains(im)) { // avoid duplicates
-                    imports.add(im);
-                }
-            }
-        }
-
-        operations.put("imports", imports);
-
-        // add a flag to indicate whether there's any {{import}}
-        if (imports.size() > 0) {
-            operations.put("hasImport", true);
-        }
-        config.postProcessOperations(operations);
-        config.postProcessOperationsWithModels(operations, allModels);
-        if (objs.size() > 0) {
-            List<CodegenOperation> os = (List<CodegenOperation>) objs.get("operation");
-
-            if (os != null && os.size() > 0) {
-                CodegenOperation op = os.get(os.size() - 1);
-                op.hasMore = false;
-            }
-        }
-        return operations;
-    }
-
-
-    protected Map<String, Object> processModels(CodegenConfig config, Map<String, Model> definitions, Map<String, Model> allDefinitions) {
+    protected Map<String, Object> processModels(CodegenConfigExt config, Map<String, Model> definitions, Map<String, Model> allDefinitions) {
         Map<String, Object> objs = new HashMap<String, Object>();
         objs.put("package", config.modelPackage());
         List<Object> models = new ArrayList<Object>();

@@ -1,10 +1,11 @@
 package com.epam.jdi.generator;
 
+import io.swagger.codegen.*;
+
 import java.io.File;
 import java.util.*;
 
-public class JavaClientCodegen extends AbstractJavaCodegen
-{
+public class JavaClientCodegen extends AbstractJavaCodegen {
     static final String MEDIA_TYPE = "mediaType";
 
     public static final String PARCELABLE_MODEL = "parcelableModel";
@@ -36,6 +37,11 @@ public class JavaClientCodegen extends AbstractJavaCodegen
         cliOptions.add(libraryOption);
         setLibrary("okhttp-gson");
 
+    }
+
+    @Override
+    public CodegenType getTag() {
+        return CodegenType.CLIENT;
     }
 
     @Override

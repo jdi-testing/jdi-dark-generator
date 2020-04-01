@@ -1,5 +1,6 @@
 package com.epam.jdi.generator;
 
+import io.swagger.codegen.CodegenConstants;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.AuthorizationValue;
 import io.swagger.parser.SwaggerParser;
@@ -47,7 +48,7 @@ public class CodegenConfigurator implements Serializable {
     private String httpUserAgent;
 
     private Swagger swagger;
-    private CodegenConfig genInst;
+    private CodegenConfigExt genInst;
 
     public CodegenConfigurator() {
         this.setOutputDir(".");
@@ -174,7 +175,7 @@ public class CodegenConfigurator implements Serializable {
         return this.swagger;
     }
 
-    public CodegenConfig getGenerator() { return this.genInst; }
+    public CodegenConfigExt getGenerator() { return this.genInst; }
 
     public static List<AuthorizationValue> parseAuth(String urlEncodedAuthStr) {
         List<AuthorizationValue> auths = new ArrayList<AuthorizationValue>();
@@ -223,9 +224,9 @@ public class CodegenConfigurator implements Serializable {
             throw new RuntimeException("The swagger specification supplied was not valid");
         }
 
-        ServiceLoader<CodegenConfig> loader = ServiceLoader.load(CodegenConfig.class);
+        ServiceLoader<CodegenConfigExt> loader = ServiceLoader.load(CodegenConfigExt.class);
 
-        for (CodegenConfig config : loader) {
+        for (CodegenConfigExt config : loader) {
             if (config.getName().equals("java")) {
                 genInst = config;
             }
@@ -234,7 +235,7 @@ public class CodegenConfigurator implements Serializable {
         if (genInst == null) {
             // else try to load directly
             try {
-                genInst = (CodegenConfig) Class.forName("java").newInstance();
+                genInst = (CodegenConfigExt) Class.forName("java").newInstance();
             } catch (Exception e) {
                 throw new RuntimeException("Can't load config class with name ".concat("java"), e);
             }

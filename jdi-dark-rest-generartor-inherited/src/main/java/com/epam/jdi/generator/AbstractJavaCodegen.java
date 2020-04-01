@@ -1,6 +1,7 @@
 package com.epam.jdi.generator;
 
 import com.google.common.base.Strings;
+import io.swagger.codegen.*;
 import io.swagger.models.*;
 import io.swagger.models.parameters.*;
 import io.swagger.models.properties.*;
@@ -13,7 +14,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-public abstract class AbstractJavaCodegen extends DefaultCodegen implements CodegenConfig {
+public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements CodegenConfigExt {
 
     static Logger LOGGER = LoggerFactory.getLogger(AbstractJavaCodegen.class);
     public static final String FULL_JAVA_UTIL = "fullJavaUtil";
@@ -335,7 +336,6 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         return camelize(name) + "Api";
     }
 
-    @Override
     public String toEndpointVarName(String name) {
         if (name.length() == 0) {
             return "Default";
@@ -865,9 +865,8 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         }
     }
 
-    @Override
-    public CodegenOperation fromOperation(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
-        CodegenOperation op = super.fromOperation(path, httpMethod, operation, definitions, swagger);
+    public CodegenOperationExt fromOperationExt(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
+        CodegenOperationExt op = super.fromOperationExt(path, httpMethod, operation, definitions, swagger);
         op.path = sanitizePath(op.path);
         return op;
     }

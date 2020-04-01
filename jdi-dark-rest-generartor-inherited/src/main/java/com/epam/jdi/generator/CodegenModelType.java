@@ -1,9 +1,11 @@
 package com.epam.jdi.generator;
 
+import io.swagger.codegen.*;
+
 public enum CodegenModelType {
 
     MODEL(CodegenModel.class),
-    OPERATION(CodegenOperation.class),
+    OPERATION(CodegenOperationExt.class),
     PARAMETER(CodegenParameter.class),
     PROPERTY(CodegenProperty.class),
     RESPONSE(CodegenResponse.class);
@@ -17,4 +19,5 @@ public enum CodegenModelType {
     public Class<?> getDefaultImplementation() {
         return defaultImplementation;
     }
+
 }

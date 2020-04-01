@@ -2,6 +2,7 @@ package com.epam.jdi.generator;
 
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
+import io.swagger.codegen.CodegenConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +118,6 @@ public class Generate implements Runnable {
             opts.setAuth(auth);
         }
 
-        new DefaultGenerator().generate(opts.build());
+        new DefaultGeneratorExt().generate(opts.build());
     }
 }
