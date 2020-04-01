@@ -2,8 +2,13 @@ package com.epam.jdi.generator;
 
 import com.google.common.base.Strings;
 import io.swagger.codegen.*;
-import io.swagger.models.*;
-import io.swagger.models.parameters.*;
+import io.swagger.models.Model;
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.Swagger;
+import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.parameters.FormParameter;
+import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,7 +19,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements CodegenConfigExt {
+public abstract class AbstractJavaCodegen extends DefaultCodegen implements CodegenConfig {
 
     static Logger LOGGER = LoggerFactory.getLogger(AbstractJavaCodegen.class);
     public static final String FULL_JAVA_UTIL = "fullJavaUtil";
@@ -123,13 +128,13 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
             this.setInvokerPackage((String) additionalProperties.get(CodegenConstants.INVOKER_PACKAGE));
         } else if (additionalProperties.containsKey(CodegenConstants.API_PACKAGE)) {
             // guess from api package
-            String derviedInvokerPackage = deriveInvokerPackageName((String)additionalProperties.get(CodegenConstants.API_PACKAGE));
+            String derviedInvokerPackage = deriveInvokerPackageName((String) additionalProperties.get(CodegenConstants.API_PACKAGE));
             this.additionalProperties.put(CodegenConstants.INVOKER_PACKAGE, derviedInvokerPackage);
             this.setInvokerPackage((String) additionalProperties.get(CodegenConstants.INVOKER_PACKAGE));
             LOGGER.info("Invoker Package Name, originally not set, is now dervied from api package name: " + derviedInvokerPackage);
         } else if (additionalProperties.containsKey(CodegenConstants.MODEL_PACKAGE)) {
             // guess from model package
-            String derviedInvokerPackage = deriveInvokerPackageName((String)additionalProperties.get(CodegenConstants.MODEL_PACKAGE));
+            String derviedInvokerPackage = deriveInvokerPackageName((String) additionalProperties.get(CodegenConstants.MODEL_PACKAGE));
             this.additionalProperties.put(CodegenConstants.INVOKER_PACKAGE, derviedInvokerPackage);
             this.setInvokerPackage((String) additionalProperties.get(CodegenConstants.INVOKER_PACKAGE));
             LOGGER.info("Invoker Package Name, originally not set, is now dervied from model package name: " + derviedInvokerPackage);
@@ -258,7 +263,6 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
         importMapping.put("com.fasterxml.jackson.annotation.JsonProperty", "com.fasterxml.jackson.annotation.JsonCreator");
 
 
-
         if (this.skipAliasGeneration == null) {
             this.skipAliasGeneration = Boolean.TRUE;
         }
@@ -286,14 +290,16 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
 
     @Override
     public String escapeReservedWord(String name) {
-        if(this.reservedWordsMappings().containsKey(name)) {
+        if (this.reservedWordsMappings().containsKey(name)) {
             return this.reservedWordsMappings().get(name);
         }
         return "_" + name;
     }
 
     @Override
-    public String apiFileFolder() { return outputFolder + "/" + sourceFolder + "/" + apiPackage().replace('.', '/'); }
+    public String apiFileFolder() {
+        return outputFolder + "/" + sourceFolder + "/" + apiPackage().replace('.', '/');
+    }
 
     @Override
     public String apiTestFileFolder() {
@@ -301,7 +307,9 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
     }
 
     @Override
-    public String modelFileFolder() { return outputFolder + "/" + sourceFolder + "/" + modelPackage().replace('.', '/'); }
+    public String modelFileFolder() {
+        return outputFolder + "/" + sourceFolder + "/" + modelPackage().replace('.', '/');
+    }
 
     @Override
     public String apiDocFileFolder() {
@@ -357,7 +365,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
             return "propertyClass";
         }
 
-        if("_".equals(name)) {
+        if ("_".equals(name)) {
             name = "_u";
         }
 
@@ -366,7 +374,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
             return name;
         }
 
-        if(startsWithTwoUppercaseLetters(name)){
+        if (startsWithTwoUppercaseLetters(name)) {
             name = name.substring(0, 2).toLowerCase() + name.substring(2);
         }
 
@@ -384,7 +392,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
 
     private boolean startsWithTwoUppercaseLetters(String name) {
         boolean startsWithTwoUppercaseLetters = false;
-        if(name.length() > 1) {
+        if (name.length() > 1) {
             startsWithTwoUppercaseLetters = name.substring(0, 2).equals(name.substring(0, 2).toUpperCase());
         }
         return startsWithTwoUppercaseLetters;
@@ -536,7 +544,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
         } else if (p instanceof LongProperty) {
             LongProperty dp = (LongProperty) p;
             if (dp.getDefault() != null) {
-                return dp.getDefault().toString()+"l";
+                return dp.getDefault().toString() + "l";
             }
             return "null";
         } else if (p instanceof DoubleProperty) {
@@ -651,7 +659,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
 
     @Override
     public String toExampleValue(Property p) {
-        if(p.getExample() != null) {
+        if (p.getExample() != null) {
             return escapeText(p.getExample().toString());
         } else {
             return super.toExampleValue(p);
@@ -697,7 +705,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
     @Override
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
-        if(codegenModel.description != null) {
+        if (codegenModel.description != null) {
             codegenModel.imports.add("ApiModel");
         }
         if (codegenModel.discriminator != null && additionalProperties.containsKey("jackson")) {
@@ -713,7 +721,8 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
     }
 
     @Override
-    public void postProcessParameter(CodegenParameter parameter) { }
+    public void postProcessParameter(CodegenParameter parameter) {
+    }
 
     @Override
     public Map<String, Object> postProcessModels(Map<String, Object> objs) {
@@ -728,7 +737,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
             // if the import package happens to be found in the importMapping (key)
             // add the corresponding import package to the list
             if (importMapping.containsKey(_import)) {
-                Map<String, String> newImportMap= new HashMap<String, String>();
+                Map<String, String> newImportMap = new HashMap<String, String>();
                 newImportMap.put("import", importMapping.get(_import));
                 listIterator.add(newImportMap);
             }
@@ -743,7 +752,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
         // imported in the template already.
         List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
         Pattern pattern = Pattern.compile("java\\.util\\.(List|ArrayList|Map|HashMap)");
-        for (Iterator<Map<String, String>> itr = imports.iterator(); itr.hasNext();) {
+        for (Iterator<Map<String, String>> itr = imports.iterator(); itr.hasNext(); ) {
             String _import = itr.next().get("import");
             if (pattern.matcher(_import).matches()) {
                 itr.remove();
@@ -754,12 +763,12 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
 
     @Override
     public void preprocessSwagger(Swagger swagger) {
-        if (swagger == null || swagger.getPaths() == null){
+        if (swagger == null || swagger.getPaths() == null) {
             return;
         }
         for (String pathname : swagger.getPaths().keySet()) {
             Path path = swagger.getPath(pathname);
-            if (path.getOperations() == null){
+            if (path.getOperations() == null) {
                 continue;
             }
             for (Operation operation : path.getOperations()) {
@@ -773,9 +782,9 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
                         hasBodyParameters = true;
                     }
                 }
-                if (hasBodyParameters || hasFormParameters){
+                if (hasBodyParameters || hasFormParameters) {
                     String defaultContentType = hasFormParameters ? "application/x-www-form-urlencoded" : "application/json";
-                    String contentType =  operation.getConsumes() == null || operation.getConsumes().isEmpty() ? defaultContentType : operation.getConsumes().get(0);
+                    String contentType = operation.getConsumes() == null || operation.getConsumes().isEmpty() ? defaultContentType : operation.getConsumes().get(0);
                     operation.setVendorExtension("x-contentType", contentType);
                 }
                 String accepts = getAccept(operation);
@@ -865,8 +874,8 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
         }
     }
 
-    public CodegenOperationExt fromOperationExt(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
-        CodegenOperationExt op = super.fromOperationExt(path, httpMethod, operation, definitions, swagger);
+    public CodegenOperation fromOperationExt(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
+        CodegenOperation op = super.fromOperationExt(path, httpMethod, operation, definitions, swagger);
         op.path = sanitizePath(op.path);
         return op;
     }
@@ -879,7 +888,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
         // Because the child models extend the parents, the enums will be available via the parent.
 
         // Only bother with reconciliation if the parent model has enums.
-        if  (!parentCodegenModel.hasEnums) {
+        if (!parentCodegenModel.hasEnums) {
             return codegenModel;
         }
 
@@ -907,10 +916,10 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
             }
         }
 
-        if(removedChildEnum) {
+        if (removedChildEnum) {
             // If we removed an entry from this model's vars, we need to ensure hasMore is updated
             int count = 0, numVars = codegenProperties.size();
-            for(CodegenProperty codegenProperty : codegenProperties) {
+            for (CodegenProperty codegenProperty : codegenProperties) {
                 count += 1;
                 codegenProperty.hasMore = (count < numVars) ? true : false;
             }
@@ -922,7 +931,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
     private static String sanitizePackageName(String packageName) {
         packageName = packageName.trim(); // FIXME: a parameter should not be assigned. Also declare the methods parameters as 'final'.
         packageName = packageName.replaceAll("[^a-zA-Z0-9_\\.]", "_");
-        if(Strings.isNullOrEmpty(packageName)) {
+        if (Strings.isNullOrEmpty(packageName)) {
             return "invalidPackageName";
         }
         return packageName;
@@ -1012,7 +1021,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegenExt implements C
 
         StringBuilder sb = new StringBuilder();
         String delim = "";
-        for (String p : Arrays.copyOf(parts, parts.length-1)) {
+        for (String p : Arrays.copyOf(parts, parts.length - 1)) {
             sb.append(delim).append(p);
             delim = ".";
         }

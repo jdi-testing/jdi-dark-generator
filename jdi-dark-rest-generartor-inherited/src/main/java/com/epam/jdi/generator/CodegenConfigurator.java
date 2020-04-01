@@ -42,13 +42,13 @@ public class CodegenConfigurator implements Serializable {
     private String modelNamePrefix;
     private String modelNameSuffix;
 
-    private String gitUserId="GIT_USER_ID";
-    private String gitRepoId="GIT_REPO_ID";
-    private String releaseNote="Minor update";
+    private String gitUserId = "GIT_USER_ID";
+    private String gitRepoId = "GIT_REPO_ID";
+    private String releaseNote = "Minor update";
     private String httpUserAgent;
 
     private Swagger swagger;
-    private CodegenConfigExt genInst;
+    private CodegenConfig genInst;
 
     public CodegenConfigurator() {
         this.setOutputDir(".");
@@ -81,7 +81,9 @@ public class CodegenConfigurator implements Serializable {
         return this;
     }
 
-    public String getModelPackage() { return modelPackage; }
+    public String getModelPackage() {
+        return modelPackage;
+    }
 
     public CodegenConfigurator setModelPackage(String modelPackage) {
         this.modelPackage = modelPackage;
@@ -175,7 +177,9 @@ public class CodegenConfigurator implements Serializable {
         return this.swagger;
     }
 
-    public CodegenConfigExt getGenerator() { return this.genInst; }
+    public CodegenConfig getGenerator() {
+        return this.genInst;
+    }
 
     public static List<AuthorizationValue> parseAuth(String urlEncodedAuthStr) {
         List<AuthorizationValue> auths = new ArrayList<AuthorizationValue>();
@@ -224,9 +228,9 @@ public class CodegenConfigurator implements Serializable {
             throw new RuntimeException("The swagger specification supplied was not valid");
         }
 
-        ServiceLoader<CodegenConfigExt> loader = ServiceLoader.load(CodegenConfigExt.class);
+        ServiceLoader<CodegenConfig> loader = ServiceLoader.load(CodegenConfig.class);
 
-        for (CodegenConfigExt config : loader) {
+        for (CodegenConfig config : loader) {
             if (config.getName().equals("java")) {
                 genInst = config;
             }
@@ -235,7 +239,7 @@ public class CodegenConfigurator implements Serializable {
         if (genInst == null) {
             // else try to load directly
             try {
-                genInst = (CodegenConfigExt) Class.forName("java").newInstance();
+                genInst = (CodegenConfig) Class.forName("java").newInstance();
             } catch (Exception e) {
                 throw new RuntimeException("Can't load config class with name ".concat("java"), e);
             }

@@ -2,7 +2,9 @@ package com.epam.jdi.generator;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import io.swagger.codegen.*;
+import io.swagger.codegen.CodegenConstants;
+import io.swagger.codegen.CodegenModel;
+import io.swagger.codegen.SupportingFile;
 import io.swagger.models.*;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.util.Json;
@@ -14,9 +16,9 @@ import org.joda.time.DateTime;
 import java.io.*;
 import java.util.*;
 
-public class DefaultGeneratorExt extends DefaultGenerator {
+public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
     protected CodegenConfigurator opts;
-    protected CodegenConfigExt config;
+    protected CodegenConfig config;
 
     protected String getScheme() {
         String scheme;
@@ -75,13 +77,13 @@ public class DefaultGeneratorExt extends DefaultGenerator {
             // no specifics are set, generate everything
             isGenerateApis = isGenerateModels = isGenerateSupportingFiles = true;
         } else {
-            if(isGenerateApis == null) {
+            if (isGenerateApis == null) {
                 isGenerateApis = false;
             }
-            if(isGenerateModels == null) {
+            if (isGenerateModels == null) {
                 isGenerateModels = false;
             }
-            if(isGenerateSupportingFiles == null) {
+            if (isGenerateSupportingFiles == null) {
                 isGenerateSupportingFiles = false;
             }
         }
@@ -278,8 +280,8 @@ public class DefaultGeneratorExt extends DefaultGenerator {
 
     }
 
-    public Map<String, List<CodegenOperationExt>> processPathsExt(Map<String, Path> paths) {
-        Map<String, List<CodegenOperationExt>> ops = new TreeMap<>();
+    public Map<String, List<CodegenOperation>> processPathsExt(Map<String, Path> paths) {
+        Map<String, List<CodegenOperation>> ops = new TreeMap<>();
         for (String resourcePath : paths.keySet()) {
             Path path = paths.get(resourcePath);
             processOperationExt(resourcePath, "get", path.getGet(), ops, path);
@@ -293,7 +295,7 @@ public class DefaultGeneratorExt extends DefaultGenerator {
         return ops;
     }
 
-    protected void processOperationExt(String resourcePath, String httpMethod, Operation operation, Map<String, List<CodegenOperationExt>> operations, Path path) {
+    protected void processOperationExt(String resourcePath, String httpMethod, Operation operation, Map<String, List<CodegenOperation>> operations, Path path) {
         if (operation == null) {
             return;
         }
@@ -355,7 +357,7 @@ public class DefaultGeneratorExt extends DefaultGenerator {
 
         for (Tag tag : tags) {
             try {
-                CodegenOperationExt codegenOperation = config.fromOperationExt(resourcePath, httpMethod, operation, swagger.getDefinitions(), swagger);
+                CodegenOperation codegenOperation = config.fromOperationExt(resourcePath, httpMethod, operation, swagger.getDefinitions(), swagger);
                 codegenOperation.tags = new ArrayList<Tag>(tags);
                 config.addOperationToGroupExt(config.sanitizeTag(tag.getName()), resourcePath, operation, codegenOperation, operations);
 
@@ -379,7 +381,7 @@ public class DefaultGeneratorExt extends DefaultGenerator {
 
     }
 
-    protected Map<String, Object> processOperations(CodegenConfigExt config, String tag, List<CodegenOperationExt> ops, List<Object> allModels) {
+    protected Map<String, Object> processOperations(CodegenConfig config, String tag, List<CodegenOperation> ops, List<Object> allModels) {
         Map<String, Object> operations = new HashMap<String, Object>();
         Map<String, Object> objs = new HashMap<String, Object>();
         objs.put("classname", config.toApiName(tag));
@@ -388,7 +390,7 @@ public class DefaultGeneratorExt extends DefaultGenerator {
         // check for operationId uniqueness
         Set<String> opIds = new HashSet<String>();
         int counter = 0;
-        for (CodegenOperation op : ops) {
+        for (io.swagger.codegen.CodegenOperation op : ops) {
             String opId = op.nickname;
             if (opIds.contains(opId)) {
                 counter++;
@@ -403,7 +405,7 @@ public class DefaultGeneratorExt extends DefaultGenerator {
 
 
         Set<String> allImports = new TreeSet<String>();
-        for (CodegenOperation op : ops) {
+        for (io.swagger.codegen.CodegenOperation op : ops) {
             allImports.addAll(op.imports);
         }
 
@@ -431,10 +433,10 @@ public class DefaultGeneratorExt extends DefaultGenerator {
         config.postProcessOperations(operations);
         config.postProcessOperationsWithModels(operations, allModels);
         if (objs.size() > 0) {
-            List<CodegenOperation> os = (List<CodegenOperation>) objs.get("operation");
+            List<io.swagger.codegen.CodegenOperation> os = (List<io.swagger.codegen.CodegenOperation>) objs.get("operation");
 
             if (os != null && os.size() > 0) {
-                CodegenOperation op = os.get(os.size() - 1);
+                io.swagger.codegen.CodegenOperation op = os.get(os.size() - 1);
                 op.hasMore = false;
             }
         }
@@ -445,14 +447,14 @@ public class DefaultGeneratorExt extends DefaultGenerator {
         if (!isGenerateApis) {
             return;
         }
-        Map<String, List<CodegenOperationExt>> paths = processPathsExt(swagger.getPaths());
+        Map<String, List<CodegenOperation>> paths = processPathsExt(swagger.getPaths());
         Set<String> apisToGenerate = null;
         String apiNames = System.getProperty("apis");
         if (apiNames != null && !apiNames.isEmpty()) {
             apisToGenerate = new HashSet<String>(Arrays.asList(apiNames.split(",")));
         }
         if (apisToGenerate != null && !apisToGenerate.isEmpty()) {
-            Map<String, List<CodegenOperationExt>> updatedPaths = new TreeMap<String, List<CodegenOperationExt>>();
+            Map<String, List<CodegenOperation>> updatedPaths = new TreeMap<String, List<CodegenOperation>>();
             for (String m : paths.keySet()) {
                 if (apisToGenerate.contains(m)) {
                     updatedPaths.put(m, paths.get(m));
@@ -462,10 +464,10 @@ public class DefaultGeneratorExt extends DefaultGenerator {
         }
         for (String tag : paths.keySet()) {
             try {
-                List<CodegenOperationExt> ops = paths.get(tag);
-                Collections.sort(ops, new Comparator<CodegenOperationExt>() {
+                List<CodegenOperation> ops = paths.get(tag);
+                Collections.sort(ops, new Comparator<CodegenOperation>() {
                     @Override
-                    public int compare(CodegenOperationExt one, CodegenOperationExt another) {
+                    public int compare(CodegenOperation one, CodegenOperation another) {
                         return ObjectUtils.compare(one.operationId, another.operationId);
                     }
                 });
@@ -506,7 +508,7 @@ public class DefaultGeneratorExt extends DefaultGenerator {
                     }
                 }
 
-                if(isGenerateApiTests) {
+                if (isGenerateApiTests) {
                     // to generate api test files
                     for (String templateName : config.apiTestTemplateFiles().keySet()) {
                         String filename = config.apiTestFilename(templateName, tag);
@@ -573,46 +575,46 @@ public class DefaultGeneratorExt extends DefaultGenerator {
                 }
 
                 //if (ignoreProcessor.allowsFile(new File(outputFilename))) {
-                    if (templateFile.endsWith("mustache")) {
-                        String template = readTemplate(templateFile);
-                        Mustache.Compiler compiler = Mustache.compiler();
-                        compiler = config.processCompiler(compiler);
-                        Template tmpl = compiler
-                                .withLoader(new Mustache.TemplateLoader() {
-                                    @Override
-                                    public Reader getTemplate(String name) {
-                                        return getTemplateReader(getFullTemplateFile(config, name + ".mustache"));
-                                    }
-                                })
-                                .defaultValue("")
-                                .compile(template);
+                if (templateFile.endsWith("mustache")) {
+                    String template = readTemplate(templateFile);
+                    Mustache.Compiler compiler = Mustache.compiler();
+                    compiler = config.processCompiler(compiler);
+                    Template tmpl = compiler
+                            .withLoader(new Mustache.TemplateLoader() {
+                                @Override
+                                public Reader getTemplate(String name) {
+                                    return getTemplateReader(getFullTemplateFile(config, name + ".mustache"));
+                                }
+                            })
+                            .defaultValue("")
+                            .compile(template);
 
-                        writeToFile(outputFilename, tmpl.execute(bundle));
-                        files.add(new File(outputFilename));
-                    } else {
-                        InputStream in = null;
+                    writeToFile(outputFilename, tmpl.execute(bundle));
+                    files.add(new File(outputFilename));
+                } else {
+                    InputStream in = null;
 
-                        try {
-                            in = new FileInputStream(templateFile);
-                        } catch (Exception e) {
-                            // continue
-                        }
-                        if (in == null) {
-                            in = this.getClass().getClassLoader().getResourceAsStream(getCPResourcePath(templateFile));
-                        }
-                        File outputFile = new File(outputFilename);
-                        OutputStream out = new FileOutputStream(outputFile, false);
-                        if (in != null) {
-                            LOGGER.info("writing file " + outputFile);
-                            IOUtils.copy(in, out);
-                            out.close();
-                        } else {
-                            LOGGER.error("can't open " + templateFile + " for input");
-                        }
-                        files.add(outputFile);
+                    try {
+                        in = new FileInputStream(templateFile);
+                    } catch (Exception e) {
+                        // continue
                     }
+                    if (in == null) {
+                        in = this.getClass().getClassLoader().getResourceAsStream(getCPResourcePath(templateFile));
+                    }
+                    File outputFile = new File(outputFilename);
+                    OutputStream out = new FileOutputStream(outputFile, false);
+                    if (in != null) {
+                        LOGGER.info("writing file " + outputFile);
+                        IOUtils.copy(in, out);
+                        out.close();
+                    } else {
+                        LOGGER.error("can't open " + templateFile + " for input");
+                    }
+                    files.add(outputFile);
+                }
                 //} else {
-                    //LOGGER.info("Skipped generation of " + outputFilename + " due to rule in .swagger-codegen-ignore");
+                //LOGGER.info("Skipped generation of " + outputFilename + " due to rule in .swagger-codegen-ignore");
                 //}
             } catch (Exception e) {
                 throw new RuntimeException("Could not generate supporting file '" + support + "'", e);
@@ -706,7 +708,7 @@ public class DefaultGeneratorExt extends DefaultGenerator {
         return new File(adjustedOutputFilename);
     }
 
-    protected Map<String, Object> processModels(CodegenConfigExt config, Map<String, Model> definitions, Map<String, Model> allDefinitions) {
+    protected Map<String, Object> processModels(CodegenConfig config, Map<String, Model> definitions, Map<String, Model> allDefinitions) {
         Map<String, Object> objs = new HashMap<String, Object>();
         objs.put("package", config.modelPackage());
         List<Object> models = new ArrayList<Object>();

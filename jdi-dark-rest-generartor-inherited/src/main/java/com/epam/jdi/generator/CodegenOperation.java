@@ -1,12 +1,9 @@
 package com.epam.jdi.generator;
 
-import io.swagger.codegen.CodegenOperation;
-import io.swagger.models.ExternalDocs;
-import io.swagger.models.Tag;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
-
-public class CodegenOperationExt extends CodegenOperation {
+public class CodegenOperation extends io.swagger.codegen.CodegenOperation {
     public boolean hasAuthMethods, hasConsumes, hasProduces, hasParams, hasOptionalParams, hasRequiredParams,
             returnTypeIsPrimitive, returnSimpleType, isMapContainer,
             isListContainer, isMultipart, hasMore = true,

@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DefaultCodegenExt extends DefaultCodegen {
+public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
 
     protected String invokerPackage;
     protected Map<String, Object> vendorExtensions = new HashMap<String, Object>();
@@ -75,8 +75,8 @@ public class DefaultCodegenExt extends DefaultCodegen {
     /**
      * Convert Swagger Model object to Codegen Model object
      *
-     * @param name the name of the model
-     * @param model Swagger Model object
+     * @param name           the name of the model
+     * @param model          Swagger Model object
      * @param allDefinitions a map of all Swagger models from the spec
      * @return Codegen Model object
      */
@@ -128,7 +128,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
                 allRequired = new ArrayList<String>();
                 m.allVars = new ArrayList<CodegenProperty>();
                 int modelImplCnt = 0; // only one inline object allowed in a ComposedModel
-                for (Model innerModel: ((ComposedModel)model).getAllOf()) {
+                for (Model innerModel : ((ComposedModel) model).getAllOf()) {
                     if (innerModel instanceof ModelImpl) {
                         ModelImpl modelImpl = (ModelImpl) innerModel;
                         if (m.discriminator == null) {
@@ -187,20 +187,19 @@ public class DefaultCodegenExt extends DefaultCodegen {
 
             if (parent != null) {
                 String parentName = null;
-                if(parent instanceof RefModel) {
-                    parentName = ((RefModel)parent).getSimpleRef();
-                }
-                else {
-                    if(parent instanceof ModelImpl) {
+                if (parent instanceof RefModel) {
+                    parentName = ((RefModel) parent).getSimpleRef();
+                } else {
+                    if (parent instanceof ModelImpl) {
                         // check for a title
                         ModelImpl parentImpl = (ModelImpl) parent;
-                        if(StringUtils.isNotBlank(parentImpl.getTitle())) {
+                        if (StringUtils.isNotBlank(parentImpl.getTitle())) {
                             parentName = parentImpl.getTitle();
                         }
                     }
                 }
 
-                if(parentName != null) {
+                if (parentName != null) {
                     m.parentSchema = parentName;
                     m.parent = toModelName(parentName);
                     addImport(m, m.parent);
@@ -239,7 +238,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
                 Property p = PropertyBuilder.build(impl.getType(), impl.getFormat(), null);
                 m.dataType = getSwaggerType(p);
             }
-            if(impl.getEnum() != null && impl.getEnum().size() > 0) {
+            if (impl.getEnum() != null && impl.getEnum().size() > 0) {
                 m.isEnum = true;
                 // comment out below as allowableValues is not set in post processing model enum
                 m.allowableValues = new HashMap<String, Object>();
@@ -252,7 +251,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
         }
 
         if (m.vars != null) {
-            for(CodegenProperty prop : m.vars) {
+            for (CodegenProperty prop : m.vars) {
                 postProcessModelProperty(m, prop);
             }
         }
@@ -271,9 +270,9 @@ public class DefaultCodegenExt extends DefaultCodegen {
     /**
      * Generate the next name for the given name, i.e. append "2" to the base name if not ending with a number,
      * otherwise increase the number by 1. For example:
-     *   status    => status2
-     *   status2   => status3
-     *   myName100 => myName101
+     * status    => status2
+     * status2   => status3
+     * myName100 => myName101
      *
      * @param name The base name
      * @return The next name for the base name
@@ -307,19 +306,19 @@ public class DefaultCodegenExt extends DefaultCodegen {
     /**
      * Convert Swagger Operation object to Codegen Operation object
      *
-     * @param path the path of the operation
-     * @param httpMethod HTTP method
-     * @param operation Swagger operation object
+     * @param path        the path of the operation
+     * @param httpMethod  HTTP method
+     * @param operation   Swagger operation object
      * @param definitions a map of Swagger models
-     * @param swagger a Swagger object representing the spec
+     * @param swagger     a Swagger object representing the spec
      * @return Codegen Operation object
      */
-    public CodegenOperationExt fromOperationExt(String path,
+    public CodegenOperation fromOperationExt(String path,
                                              String httpMethod,
                                              Operation operation,
                                              Map<String, Model> definitions,
                                              Swagger swagger) {
-        CodegenOperationExt op = CodegenModelFactory.newInstance(CodegenModelType.OPERATION);
+        CodegenOperation op = CodegenModelFactory.newInstance(CodegenModelType.OPERATION);
         Set<String> imports = new HashSet<String>();
         op.vendorExtensions = operation.getVendorExtensions();
         imports.add(httpMethod);
@@ -329,7 +328,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
         if (removeOperationIdPrefix) {
             int offset = operationId.indexOf('_');
             if (offset > -1) {
-                operationId = operationId.substring(offset+1);
+                operationId = operationId.substring(offset + 1);
             }
         }
         operationId = removeNonNameElementToCamelCase(operationId);
@@ -430,10 +429,10 @@ public class DefaultCodegenExt extends DefaultCodegen {
                 }
                 r.isDefault = response == methodResponse;
                 op.responses.add(r);
-                if (Boolean.TRUE.equals(r.isBinary) && Boolean.TRUE.equals(r.isDefault)){
+                if (Boolean.TRUE.equals(r.isBinary) && Boolean.TRUE.equals(r.isDefault)) {
                     op.isResponseBinary = Boolean.TRUE;
                 }
-                if (Boolean.TRUE.equals(r.isFile) && Boolean.TRUE.equals(r.isDefault)){
+                if (Boolean.TRUE.equals(r.isFile) && Boolean.TRUE.equals(r.isDefault)) {
                     op.isResponseFile = Boolean.TRUE;
                 }
             }
@@ -635,30 +634,30 @@ public class DefaultCodegenExt extends DefaultCodegen {
     /**
      * Add operation to group
      *
-     * @param tag name of the tag
+     * @param tag          name of the tag
      * @param resourcePath path of the resource
-     * @param operation Swagger Operation object
-     * @param co Codegen Operation object
-     * @param operations map of Codegen operations
+     * @param operation    Swagger Operation object
+     * @param co           Codegen Operation object
+     * @param operations   map of Codegen operations
      */
     @SuppressWarnings("static-method")
-    public void addOperationToGroupExt(String tag, String resourcePath, Operation operation, CodegenOperationExt co, Map<String, List<CodegenOperationExt>> operations) {
-        List<CodegenOperationExt> opList = operations.get(tag);
+    public void addOperationToGroupExt(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
+        List<CodegenOperation> opList = operations.get(tag);
         if (opList == null) {
-            opList = new ArrayList<CodegenOperationExt>();
+            opList = new ArrayList<CodegenOperation>();
             operations.put(tag, opList);
         }
         // check for operationId uniqueness
 
         String uniqueName = co.operationId;
         int counter = 0;
-        for(CodegenOperationExt op : opList) {
-            if(uniqueName.equals(op.operationId)) {
+        for (CodegenOperation op : opList) {
+            if (uniqueName.equals(op.operationId)) {
                 uniqueName = co.operationId + "_" + counter;
-                counter ++;
+                counter++;
             }
         }
-        if(!co.operationId.equals(uniqueName)) {
+        if (!co.operationId.equals(uniqueName)) {
             LOGGER.warn("generated unique operationId `" + uniqueName + "`");
         }
         co.operationId = uniqueName;
@@ -679,7 +678,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
             m.hasEnums = false;
 
 
-            Set<String> mandatory = required == null ? Collections.<String> emptySet()
+            Set<String> mandatory = required == null ? Collections.<String>emptySet()
                     : new TreeSet<String>(required);
             addVars(m, m.vars, properties, mandatory, allDefinitions);
             //m.allMandatory = m.mandatory = mandatory;
@@ -690,7 +689,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
         }
 
         if (allProperties != null) {
-            Set<String> allMandatory = allRequired == null ? Collections.<String> emptySet()
+            Set<String> allMandatory = allRequired == null ? Collections.<String>emptySet()
                     : new TreeSet<String>(allRequired);
             addVars(m, m.allVars, allProperties, allMandatory, allDefinitions);
             //m.allMandatory = allMandatory;
@@ -722,7 +721,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
 
                 if (allDefinitions != null && prop instanceof RefProperty) {
                     RefProperty refProperty = (RefProperty) prop;
-                    Model model =  allDefinitions.get(refProperty.getSimpleRef());
+                    Model model = allDefinitions.get(refProperty.getSimpleRef());
                     if (model instanceof ModelImpl) {
                         ModelImpl modelImpl = (ModelImpl) model;
                         cp.pattern = modelImpl.getPattern();
@@ -736,10 +735,10 @@ public class DefaultCodegenExt extends DefaultCodegen {
                     m.hasOnlyReadOnly = false;
                 }
 
-                if (i+1 != totalCount) {
+                if (i + 1 != totalCount) {
                     cp.hasMore = true;
                     // check the next entry to see if it's read only
-                    if (!Boolean.TRUE.equals(propertyList.get(i+1).getValue().getReadOnly())) {
+                    if (!Boolean.TRUE.equals(propertyList.get(i + 1).getValue().getReadOnly())) {
                         cp.hasMoreNonReadOnly = true; // next entry is not ready only
                     }
                 }
@@ -750,7 +749,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
 
                 addImport(m, cp.baseType);
                 CodegenProperty innerCp = cp;
-                while(innerCp != null) {
+                while (innerCp != null) {
                     addImport(m, innerCp.complexType);
                     innerCp = innerCp.items;
                 }
@@ -781,6 +780,7 @@ public class DefaultCodegenExt extends DefaultCodegen {
     /**
      * Determine all of the types in the model definitions that are aliases of
      * simple types.
+     *
      * @param allDefinitions The complete set of model definitions.
      * @return A mapping from model name to type alias
      */
@@ -812,23 +812,22 @@ public class DefaultCodegenExt extends DefaultCodegen {
     /**
      * Only write if the file doesn't exist
      *
-     * @param outputFolder Output folder
+     * @param outputFolder   Output folder
      * @param supportingFile Supporting file
      */
     public void writeOptional(String outputFolder, SupportingFile supportingFile) {
         String folder = "";
 
-        if(outputFolder != null && !"".equals(outputFolder)) {
+        if (outputFolder != null && !"".equals(outputFolder)) {
             folder += outputFolder + File.separator;
         }
         folder += supportingFile.folder;
-        if(!"".equals(folder)) {
+        if (!"".equals(folder)) {
             folder += File.separator + supportingFile.destinationFilename;
-        }
-        else {
+        } else {
             folder = supportingFile.destinationFilename;
         }
-        if(!new File(folder).exists()) {
+        if (!new File(folder).exists()) {
             supportingFiles.add(supportingFile);
         } else {
             LOGGER.info("Skipped overwriting " + supportingFile.destinationFilename + " as the file already exists in " + folder);

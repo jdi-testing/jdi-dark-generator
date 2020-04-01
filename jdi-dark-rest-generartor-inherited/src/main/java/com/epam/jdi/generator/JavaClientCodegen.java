@@ -3,7 +3,9 @@ package com.epam.jdi.generator;
 import io.swagger.codegen.*;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JavaClientCodegen extends AbstractJavaCodegen {
     static final String MEDIA_TYPE = "mediaType";
@@ -126,7 +128,7 @@ public class JavaClientCodegen extends AbstractJavaCodegen {
         objs = super.postProcessModelsEnum(objs);
         //Needed import for Gson based libraries
         if (additionalProperties.containsKey("gson")) {
-            List<Map<String, String>> imports = (List<Map<String, String>>)objs.get("imports");
+            List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
             List<Object> models = (List<Object>) objs.get("models");
             for (Object _mo : models) {
                 Map<String, Object> mo = (Map<String, Object>) _mo;
