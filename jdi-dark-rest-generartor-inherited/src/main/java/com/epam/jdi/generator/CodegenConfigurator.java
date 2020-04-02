@@ -48,7 +48,7 @@ public class CodegenConfigurator implements Serializable {
     private String httpUserAgent;
 
     private Swagger swagger;
-    private CodegenConfig genInst;
+    private CodegenConfigJDI genInst;
 
     public CodegenConfigurator() {
         this.setOutputDir(".");
@@ -177,7 +177,7 @@ public class CodegenConfigurator implements Serializable {
         return this.swagger;
     }
 
-    public CodegenConfig getGenerator() {
+    public CodegenConfigJDI getGenerator() {
         return this.genInst;
     }
 
@@ -228,9 +228,9 @@ public class CodegenConfigurator implements Serializable {
             throw new RuntimeException("The swagger specification supplied was not valid");
         }
 
-        ServiceLoader<CodegenConfig> loader = ServiceLoader.load(CodegenConfig.class);
+        ServiceLoader<CodegenConfigJDI> loader = ServiceLoader.load(CodegenConfigJDI.class);
 
-        for (CodegenConfig config : loader) {
+        for (CodegenConfigJDI config : loader) {
             if (config.getName().equals("java")) {
                 genInst = config;
             }
@@ -239,7 +239,7 @@ public class CodegenConfigurator implements Serializable {
         if (genInst == null) {
             // else try to load directly
             try {
-                genInst = (CodegenConfig) Class.forName("java").newInstance();
+                genInst = (CodegenConfigJDI) Class.forName("java").newInstance();
             } catch (Exception e) {
                 throw new RuntimeException("Can't load config class with name ".concat("java"), e);
             }

@@ -19,9 +19,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-public abstract class AbstractJavaCodegen extends DefaultCodegen implements CodegenConfig {
+public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements CodegenConfigJDI {
 
-    static Logger LOGGER = LoggerFactory.getLogger(AbstractJavaCodegen.class);
+    static Logger LOGGER = LoggerFactory.getLogger(AbstractJavaCodegenJDI.class);
     public static final String FULL_JAVA_UTIL = "fullJavaUtil";
     public static final String JAVA8_MODE = "java8";
     public static final String WITH_XML = "withXml";
@@ -47,7 +47,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
     protected String apiDocPath = "docs/";
     protected String modelDocPath = "docs/";
 
-    public AbstractJavaCodegen() {
+    public AbstractJavaCodegenJDI() {
         super();
         supportsInheritance = true;
         modelTemplateFiles.put("templates/Java/model.mustache", ".java");
@@ -713,7 +713,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         if (allDefinitions != null && codegenModel.parentSchema != null && codegenModel.hasEnums) {
             final Model parentModel = allDefinitions.get(codegenModel.parentSchema);
             final CodegenModel parentCodegenModel = super.fromModel(codegenModel.parent, parentModel);
-            return AbstractJavaCodegen.reconcileInlineEnums(codegenModel, parentCodegenModel);
+            return AbstractJavaCodegenJDI.reconcileInlineEnums(codegenModel, parentCodegenModel);
         }
         return codegenModel;
     }
@@ -872,7 +872,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         }
     }
 
-    public CodegenOperation fromOperationExt(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
+    public CodegenOperation fromOperationJDI(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
         CodegenOperation op = super.fromOperationExt(path, httpMethod, operation, definitions, swagger);
         op.path = sanitizePath(op.path);
         return op;

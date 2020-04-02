@@ -641,7 +641,7 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
      * @param operations   map of Codegen operations
      */
     @SuppressWarnings("static-method")
-    public void addOperationToGroupExt(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
+    public void addOperationToGroupJDI(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
         List<CodegenOperation> opList = operations.get(tag);
         if (opList == null) {
             opList = new ArrayList<CodegenOperation>();

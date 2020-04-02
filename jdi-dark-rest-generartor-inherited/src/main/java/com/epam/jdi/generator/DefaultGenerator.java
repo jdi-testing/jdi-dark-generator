@@ -19,7 +19,7 @@ import java.util.*;
 
 public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
     protected CodegenConfigurator opts;
-    protected CodegenConfig config;
+    protected CodegenConfigJDI config;
 
     protected String getScheme() {
         String scheme;
@@ -358,9 +358,9 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
 
         for (Tag tag : tags) {
             try {
-                CodegenOperation codegenOperation = config.fromOperationExt(resourcePath, httpMethod, operation, swagger.getDefinitions(), swagger);
+                CodegenOperation codegenOperation = config.fromOperationJDI(resourcePath, httpMethod, operation, swagger.getDefinitions(), swagger);
                 codegenOperation.tags = new ArrayList<Tag>(tags);
-                config.addOperationToGroupExt(config.sanitizeTag(tag.getName()), resourcePath, operation, codegenOperation, operations);
+                config.addOperationToGroupJDI(config.sanitizeTag(tag.getName()), resourcePath, operation, codegenOperation, operations);
 
                 List<Map<String, List<String>>> securities = operation.getSecurity();
                 if (securities == null && swagger.getSecurity() != null) {
@@ -382,7 +382,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
 
     }
 
-    protected Map<String, Object> processOperations(CodegenConfig config, String tag, List<CodegenOperation> ops, List<Object> allModels) {
+    protected Map<String, Object> processOperations(CodegenConfigJDI config, String tag, List<CodegenOperation> ops, List<Object> allModels) {
         Map<String, Object> operations = new HashMap<String, Object>();
         Map<String, Object> objs = new HashMap<String, Object>();
         objs.put("classname", config.toApiName(tag));
@@ -709,7 +709,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         return new File(adjustedOutputFilename);
     }
 
-    protected Map<String, Object> processModels(CodegenConfig config, Map<String, Model> definitions, Map<String, Model> allDefinitions) {
+    protected Map<String, Object> processModels(CodegenConfigJDI config, Map<String, Model> definitions, Map<String, Model> allDefinitions) {
         Map<String, Object> objs = new HashMap<String, Object>();
         objs.put("package", config.modelPackage());
         List<Object> models = new ArrayList<Object>();

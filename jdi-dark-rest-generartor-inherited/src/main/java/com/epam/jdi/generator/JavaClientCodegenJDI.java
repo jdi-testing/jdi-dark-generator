@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JavaClientCodegen extends AbstractJavaCodegen {
+public class JavaClientCodegenJDI extends AbstractJavaCodegenJDI {
     static final String MEDIA_TYPE = "mediaType";
 
     public static final String PARCELABLE_MODEL = "parcelableModel";
@@ -17,7 +17,7 @@ public class JavaClientCodegen extends AbstractJavaCodegen {
     protected boolean parcelableModel = false;
     protected boolean useRuntimeException = false;
 
-    public JavaClientCodegen() {
+    public JavaClientCodegenJDI() {
         super();
         outputFolder = "generated-code" + File.separator + "java";
         embeddedTemplateDir = templateDir = "templates/Java";
