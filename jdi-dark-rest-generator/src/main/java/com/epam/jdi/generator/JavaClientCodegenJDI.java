@@ -1,12 +1,13 @@
 package com.epam.jdi.generator;
 
+import io.swagger.codegen.*;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JavaServiceGenerator extends AbstractJavaCodegen
-{
+public class JavaClientCodegenJDI extends AbstractJavaCodegenJDI {
     static final String MEDIA_TYPE = "mediaType";
 
     public static final String PARCELABLE_MODEL = "parcelableModel";
@@ -16,7 +17,7 @@ public class JavaServiceGenerator extends AbstractJavaCodegen
     protected boolean parcelableModel = false;
     protected boolean useRuntimeException = false;
 
-    public JavaServiceGenerator() {
+    public JavaClientCodegenJDI() {
         super();
         outputFolder = "generated-code" + File.separator + "java";
         embeddedTemplateDir = templateDir = "templates/Java";
@@ -31,7 +32,7 @@ public class JavaServiceGenerator extends AbstractJavaCodegen
         supportedLibraries.put("okhttp-gson", "HTTP client: OkHttp 2.7.5. JSON processing: Gson 2.8.1. Enable Parcelable models on Android using '-DparcelableModel=true'. Enable gzip request encoding using '-DuseGzipFeature=true'.");
         supportedLibraries.put("resttemplate", "HTTP client: Spring RestTemplate 4.3.9-RELEASE. JSON processing: Jackson 2.10.1");
 
-        CliOption libraryOption = new CliOption(GeneratorConstants.LIBRARY, "library template (sub-template) to use");
+        CliOption libraryOption = new CliOption(CodegenConstants.LIBRARY, "library template (sub-template) to use");
         libraryOption.setEnum(supportedLibraries);
         // set okhttp-gson as the default
         libraryOption.setDefault("okhttp-gson");
@@ -40,22 +41,23 @@ public class JavaServiceGenerator extends AbstractJavaCodegen
 
     }
 
-    @Override
+    public CodegenType getTag() {
+        return CodegenType.CLIENT;
+    }
+
     public String getName() {
         return "java";
     }
 
-    @Override
     public String getHelp() {
         return "Generates a Java client library.";
     }
 
-    @Override
     public void processOpts() {
         super.processOpts();
 
         if (additionalProperties.containsKey(PARCELABLE_MODEL)) {
-            this.setParcelableModel(Boolean.valueOf(additionalProperties.get(PARCELABLE_MODEL).toString()));
+            this.setParcelableModel(Boolean.parseBoolean(additionalProperties.get(PARCELABLE_MODEL).toString()));
         }
         // put the boolean value back to PARCELABLE_MODEL in additionalProperties
         additionalProperties.put(PARCELABLE_MODEL, parcelableModel);
@@ -89,20 +91,16 @@ public class JavaServiceGenerator extends AbstractJavaCodegen
         supportingFiles.add(new SupportingFile("pomproperties.mustache", "src/test/resources", "pom.properties"));
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         super.postProcessOperations(objs);
 
         return objs;
     }
 
-    @Override
     public String apiFilename(String templateName, String tag) {
         return super.apiFilename(templateName, tag);
     }
 
-    @Override
     public String toEndpointVarName(String name) {
         return super.toEndpointVarName(name);
     }
@@ -110,27 +108,25 @@ public class JavaServiceGenerator extends AbstractJavaCodegen
     private static boolean isMultipartType(List<Map<String, String>> consumes) {
         Map<String, String> firstType = consumes.get(0);
         if (firstType != null) {
-            if ("multipart/form-data".equals(firstType.get(MEDIA_TYPE))) {
-                return true;
-            }
+            return "multipart/form-data".equals(firstType.get(MEDIA_TYPE));
         }
         return false;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     public Map<String, Object> postProcessModelsEnum(Map<String, Object> objs) {
         objs = super.postProcessModelsEnum(objs);
         //Needed import for Gson based libraries
         if (additionalProperties.containsKey("gson")) {
-            List<Map<String, String>> imports = (List<Map<String, String>>)objs.get("imports");
+            List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
             List<Object> models = (List<Object>) objs.get("models");
             for (Object _mo : models) {
                 Map<String, Object> mo = (Map<String, Object>) _mo;
-                GeneratedModel cm = (GeneratedModel) mo.get("model");
+                CodegenModel cm = (CodegenModel) mo.get("model");
                 // for enum model
                 if (Boolean.TRUE.equals(cm.isEnum) && cm.allowableValues != null) {
                     cm.imports.add(importMapping.get("SerializedName"));
-                    Map<String, String> item = new HashMap<String, String>();
+                    Map<String, String> item = new HashMap<>();
                     item.put("import", importMapping.get("SerializedName"));
                     imports.add(item);
                 }

@@ -195,7 +195,7 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
 
         Set<String> modelKeys = definitions.keySet();
         if (modelsToGenerate != null && !modelsToGenerate.isEmpty()) {
-            Set<String> updatedKeys = new HashSet<String>();
+            Set<String> updatedKeys = new HashSet<>();
             for (String m : modelKeys) {
                 if (modelsToGenerate.contains(m)) {
                     updatedKeys.add(m);
@@ -216,7 +216,7 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
                     continue;
                 }
                 Model model = definitions.get(name);
-                Map<String, Model> modelMap = new HashMap<String, Model>();
+                Map<String, Model> modelMap = new HashMap<>();
                 modelMap.put(name, model);
                 Map<String, Object> models = processModels(config, modelMap, definitions);
                 if (models != null) {
@@ -301,7 +301,7 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
         if (System.getProperty("debugOperations") != null) {
             LOGGER.info("processOperation: resourcePath= " + resourcePath + "\t;" + httpMethod + " " + operation + "\n");
         }
-        List<Tag> tags = new ArrayList<Tag>();
+        List<Tag> tags = new ArrayList<>();
 
         List<String> tagNames = operation.getTags();
         List<Tag> swaggerTags = swagger.getTags();
@@ -337,7 +337,7 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
          per the swagger 2.0 spec "A unique parameter is defined by a combination of a name and location"
           i'm assuming "location" == "in"
         */
-        Set<String> operationParameters = new HashSet<String>();
+        Set<String> operationParameters = new HashSet<>();
         if (operation.getParameters() != null) {
             for (Parameter parameter : operation.getParameters()) {
                 operationParameters.add(generateParameterId(parameter));
@@ -381,8 +381,8 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
 
     @SuppressWarnings("unchecked")
     protected Map<String, Object> processOperations(CodegenConfigJDI config, String tag, List<CodegenOperation> ops, List<Object> allModels) {
-        Map<String, Object> operations = new HashMap<String, Object>();
-        Map<String, Object> objs = new HashMap<String, Object>();
+        Map<String, Object> operations = new HashMap<>();
+        Map<String, Object> objs = new HashMap<>();
         objs.put("classname", config.toApiName(tag));
         objs.put("pathPrefix", config.toApiVarName(tag));
 
@@ -408,9 +408,9 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
             allImports.addAll(op.imports);
         }
 
-        List<Map<String, String>> imports = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> imports = new ArrayList<>();
         for (String nextImport : allImports) {
-            Map<String, String> im = new LinkedHashMap<String, String>();
+            Map<String, String> im = new LinkedHashMap<>();
             String mapping = config.importMapping().get(nextImport);
             if (mapping == null) {
                 mapping = config.toModelImport(nextImport);
@@ -451,10 +451,10 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
         Set<String> apisToGenerate = null;
         String apiNames = System.getProperty("apis");
         if (apiNames != null && !apiNames.isEmpty()) {
-            apisToGenerate = new HashSet<String>(Arrays.asList(apiNames.split(",")));
+            apisToGenerate = new HashSet<>(Arrays.asList(apiNames.split(",")));
         }
         if (apisToGenerate != null && !apisToGenerate.isEmpty()) {
-            Map<String, List<CodegenOperation>> updatedPaths = new TreeMap<String, List<CodegenOperation>>();
+            Map<String, List<CodegenOperation>> updatedPaths = new TreeMap<>();
             for (String m : paths.keySet()) {
                 if (apisToGenerate.contains(m)) {
                     updatedPaths.put(m, paths.get(m));
@@ -617,7 +617,7 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
         Map<String, Object> bundle = new HashMap<>(config.additionalProperties());
         bundle.put("apiPackage", config.apiPackage());
 
-        Map<String, Object> apis = new HashMap<String, Object>();
+        Map<String, Object> apis = new HashMap<>();
         apis.put("apis", allOperations);
 
         if (swagger.getHost() != null) {
@@ -668,12 +668,12 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
         configureGeneratorProperties();
         configureSwaggerInfo();
 
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         // models
-        List<Object> allModels = new ArrayList<Object>();
+        List<Object> allModels = new ArrayList<>();
         generateModels(files, allModels);
         // apis
-        List<Object> allOperations = new ArrayList<Object>();
+        List<Object> allOperations = new ArrayList<>();
         generateApis(files, allOperations, allModels);
         // supporting files
         Map<String, Object> bundle = buildSupportFileBundle(allOperations, allModels);
@@ -698,15 +698,15 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
     }
 
     protected Map<String, Object> processModels(CodegenConfigJDI config, Map<String, Model> definitions, Map<String, Model> allDefinitions) {
-        Map<String, Object> objs = new HashMap<String, Object>();
+        Map<String, Object> objs = new HashMap<>();
         objs.put("package", config.modelPackage());
-        List<Object> models = new ArrayList<Object>();
-        Set<String> allImports = new LinkedHashSet<String>();
+        List<Object> models = new ArrayList<>();
+        Set<String> allImports = new LinkedHashSet<>();
         for (String key : definitions.keySet()) {
             Model mm = definitions.get(key);
 
             CodegenModel cm = config.fromModel(key, mm, allDefinitions);
-            Map<String, Object> mo = new HashMap<String, Object>();
+            Map<String, Object> mo = new HashMap<>();
             mo.put("model", cm);
             mo.put("importPath", config.toModelImport(cm.classname));
             models.add(mo);
@@ -714,7 +714,7 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
             allImports.addAll(cm.imports);
         }
         objs.put("models", models);
-        Set<String> importSet = new TreeSet<String>();
+        Set<String> importSet = new TreeSet<>();
         for (String nextImport : allImports) {
             String mapping = config.importMapping().get(nextImport);
             if (mapping == null) {
@@ -729,9 +729,9 @@ public class DefaultGeneratorJDI extends DefaultGenerator {
                 importSet.add(mapping);
             }
         }
-        List<Map<String, String>> imports = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> imports = new ArrayList<>();
         for (String s : importSet) {
-            Map<String, String> item = new HashMap<String, String>();
+            Map<String, String> item = new HashMap<>();
             item.put("import", s);
             imports.add(item);
         }

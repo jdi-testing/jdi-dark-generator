@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class DefaultCodegenJDI extends DefaultCodegen {
 
     protected String invokerPackage;
-    protected Map<String, Object> vendorExtensions = new HashMap<String, Object>();
+    protected Map<String, Object> vendorExtensions = new HashMap<>();
 
     /**
      * Output the API (class) name (capitalized) ending with "Api"
@@ -119,14 +119,14 @@ public class DefaultCodegenJDI extends DefaultCodegen {
             // TODO
         } else if (model instanceof ComposedModel) {
             final ComposedModel composed = (ComposedModel) model;
-            Map<String, Property> properties = new LinkedHashMap<String, Property>();
-            List<String> required = new ArrayList<String>();
+            Map<String, Property> properties = new LinkedHashMap<>();
+            List<String> required = new ArrayList<>();
             Map<String, Property> allProperties;
             List<String> allRequired;
             if (supportsInheritance || supportsMixins) {
-                allProperties = new LinkedHashMap<String, Property>();
-                allRequired = new ArrayList<String>();
-                m.allVars = new ArrayList<CodegenProperty>();
+                allProperties = new LinkedHashMap<>();
+                allRequired = new ArrayList<>();
+                m.allVars = new ArrayList<>();
                 int modelImplCnt = 0; // only one inline object allowed in a ComposedModel
                 for (Model innerModel : ((ComposedModel) model).getAllOf()) {
                     if (innerModel instanceof ModelImpl) {
@@ -153,12 +153,12 @@ public class DefaultCodegenJDI extends DefaultCodegen {
                 allRequired = null;
             }
             // parent model
-            Model parent = (Model) composed.getParent();
+            Model parent = composed.getParent();
 
             // interfaces (intermediate models)
             if (composed.getInterfaces() != null) {
                 if (m.interfaces == null)
-                    m.interfaces = new ArrayList<String>();
+                    m.interfaces = new ArrayList<>();
                 for (RefModel _interface : composed.getInterfaces()) {
                     Model interfaceModel = null;
                     if (allDefinitions != null) {
@@ -241,7 +241,7 @@ public class DefaultCodegenJDI extends DefaultCodegen {
             if (impl.getEnum() != null && impl.getEnum().size() > 0) {
                 m.isEnum = true;
                 // comment out below as allowableValues is not set in post processing model enum
-                m.allowableValues = new HashMap<String, Object>();
+                m.allowableValues = new HashMap<>();
                 m.allowableValues.put("values", impl.getEnum());
             }
             if (impl.getAdditionalProperties() != null) {
@@ -319,7 +319,7 @@ public class DefaultCodegenJDI extends DefaultCodegen {
                                              Map<String, Model> definitions,
                                              Swagger swagger) {
         CodegenOperation op = CodegenModelFactory.newInstance(CodegenModelType.OPERATION);
-        Set<String> imports = new HashSet<String>();
+        Set<String> imports = new HashSet<>();
         op.vendorExtensions = operation.getVendorExtensions();
         imports.add(httpMethod);
 
@@ -341,13 +341,11 @@ public class DefaultCodegenJDI extends DefaultCodegen {
             op.isDeprecated = operation.isDeprecated();
         }
 
-        List<String> consumes = new ArrayList<String>();
+        List<String> consumes = new ArrayList<>();
         if (operation.getConsumes() != null) {
             if (operation.getConsumes().size() > 0) {
                 // use consumes defined in the operation
                 consumes = operation.getConsumes();
-            } else {
-                // empty list, do nothing to override global setting
             }
         } else if (swagger != null && swagger.getConsumes() != null && swagger.getConsumes().size() > 0) {
             // use consumes defined globally
@@ -357,10 +355,10 @@ public class DefaultCodegenJDI extends DefaultCodegen {
 
         // if "consumes" is defined (per operation or using global definition)
         if (consumes != null && consumes.size() > 0) {
-            List<Map<String, String>> c = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> c = new ArrayList<>();
             int count = 0;
             for (String key : consumes) {
-                Map<String, String> mediaType = new HashMap<String, String>();
+                Map<String, String> mediaType = new HashMap<>();
                 // escape quotation to avoid code injection
                 if ("*/*".equals(key)) { // "*/*" is a special case, do nothing
                     mediaType.put("mediaType", key);
@@ -377,7 +375,7 @@ public class DefaultCodegenJDI extends DefaultCodegen {
             imports.add("ContentType");
         }
 
-        List<String> produces = new ArrayList<String>();
+        List<String> produces = new ArrayList<>();
         if (operation.getProduces() != null) {
             if (operation.getProduces().size() > 0) {
                 // use produces defined in the operation
@@ -391,10 +389,10 @@ public class DefaultCodegenJDI extends DefaultCodegen {
 
         // if "produces" is defined (per operation or using global definition)
         if (produces != null && !produces.isEmpty()) {
-            List<Map<String, String>> c = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> c = new ArrayList<>();
             int count = 0;
             for (String key : produces) {
-                Map<String, String> mediaType = new HashMap<String, String>();
+                Map<String, String> mediaType = new HashMap<>();
                 // escape quotation to avoid code injection
                 if ("*/*".equals(key)) { // "*/*" is a special case, do nothing
                     mediaType.put("mediaType", key);
@@ -492,14 +490,14 @@ public class DefaultCodegenJDI extends DefaultCodegen {
 
         List<Parameter> parameters = operation.getParameters();
         CodegenParameter bodyParam = null;
-        List<CodegenParameter> allParams = new ArrayList<CodegenParameter>();
-        List<CodegenParameter> bodyParams = new ArrayList<CodegenParameter>();
-        List<CodegenParameter> pathParams = new ArrayList<CodegenParameter>();
-        List<CodegenParameter> queryParams = new ArrayList<CodegenParameter>();
-        List<CodegenParameter> headerParams = new ArrayList<CodegenParameter>();
-        List<CodegenParameter> cookieParams = new ArrayList<CodegenParameter>();
-        List<CodegenParameter> formParams = new ArrayList<CodegenParameter>();
-        List<CodegenParameter> requiredParams = new ArrayList<CodegenParameter>();
+        List<CodegenParameter> allParams = new ArrayList<>();
+        List<CodegenParameter> bodyParams = new ArrayList<>();
+        List<CodegenParameter> pathParams = new ArrayList<>();
+        List<CodegenParameter> queryParams = new ArrayList<>();
+        List<CodegenParameter> headerParams = new ArrayList<>();
+        List<CodegenParameter> cookieParams = new ArrayList<>();
+        List<CodegenParameter> formParams = new ArrayList<>();
+        List<CodegenParameter> requiredParams = new ArrayList<>();
 
         if (parameters != null) {
             for (Parameter param : parameters) {
@@ -608,9 +606,9 @@ public class DefaultCodegenJDI extends DefaultCodegen {
             return null;
         }
 
-        final List<Map<String, Object>> output = new ArrayList<Map<String, Object>>(examples.size());
+        final List<Map<String, Object>> output = new ArrayList<>(examples.size());
         for (Entry<String, Object> entry : examples.entrySet()) {
-            final Map<String, Object> kv = new HashMap<String, Object>();
+            final Map<String, Object> kv = new HashMap<>();
             kv.put("contentType", entry.getKey());
             kv.put("example", entry.getValue());
             output.add(kv);
@@ -669,8 +667,8 @@ public class DefaultCodegenJDI extends DefaultCodegen {
             m.hasEnums = false;
 
 
-            Set<String> mandatory = required == null ? Collections.<String>emptySet()
-                    : new TreeSet<String>(required);
+            Set<String> mandatory = required == null ? Collections.emptySet()
+                    : new TreeSet<>(required);
             addVars(m, m.vars, properties, mandatory, allDefinitions);
             //m.allMandatory = m.mandatory = mandatory;
         } else {
@@ -680,8 +678,8 @@ public class DefaultCodegenJDI extends DefaultCodegen {
         }
 
         if (allProperties != null) {
-            Set<String> allMandatory = allRequired == null ? Collections.<String>emptySet()
-                    : new TreeSet<String>(allRequired);
+            Set<String> allMandatory = allRequired == null ? Collections.emptySet()
+                    : new TreeSet<>(allRequired);
             addVars(m, m.allVars, allProperties, allMandatory, allDefinitions);
             //m.allMandatory = allMandatory;
         }
@@ -689,7 +687,7 @@ public class DefaultCodegenJDI extends DefaultCodegen {
 
     private void addVars(CodegenModel m, List<CodegenProperty> vars, Map<String, Property> properties, Set<String> mandatory, Map<String, Model> allDefinitions) {
         // convert set to list so that we can access the next entry in the loop
-        List<Entry<String, Property>> propertyList = new ArrayList<Entry<String, Property>>(properties.entrySet());
+        List<Entry<String, Property>> propertyList = new ArrayList<>(properties.entrySet());
         final int totalCount = propertyList.size();
         for (int i = 0; i < totalCount; i++) {
             Entry<String, Property> entry = propertyList.get(i);

@@ -6,9 +6,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.epam.jdi</groupId>
-    <artifactId>jdi-dark-rest-generartor-inherited</artifactId>
+    <artifactId>jdi-dark-rest-generator</artifactId>
     <version>0.1</version>
-    <name>JDI Dark REST Inherited Generator</name>
+    <name>JDI Dark REST Generator</name>
     <packaging>jar</packaging>
 
     <properties>

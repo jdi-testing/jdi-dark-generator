@@ -1,5 +1,6 @@
 package com.epam.jdi.generator;
 
+import io.swagger.codegen.CodegenConstants;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.AuthorizationValue;
 import io.swagger.parser.SwaggerParser;
@@ -10,13 +11,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.URLDecoder;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 
-import static java.util.ServiceLoader.load;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
@@ -25,11 +21,11 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  * It also has a convenience method for creating a ClientOptInput class which is THE object DefaultGenerator.java needs
  * to generate code.
  */
-public class GeneratorOptions implements Serializable {
+public class CodegenConfigurator implements Serializable {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(GeneratorOptions.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(CodegenConfigurator.class);
 
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
     private String inputSpec;
     private String outputDir;
     private boolean isGenerateModels;
@@ -46,19 +42,19 @@ public class GeneratorOptions implements Serializable {
     private String modelNamePrefix;
     private String modelNameSuffix;
 
-    private String gitUserId="GIT_USER_ID";
-    private String gitRepoId="GIT_REPO_ID";
-    private String releaseNote="Minor update";
+    private String gitUserId = "GIT_USER_ID";
+    private String gitRepoId = "GIT_REPO_ID";
+    private String releaseNote = "Minor update";
     private String httpUserAgent;
 
     private Swagger swagger;
-    private Generator genInst;
+    private CodegenConfigJDI genInst;
 
-    public GeneratorOptions() {
+    public CodegenConfigurator() {
         this.setOutputDir(".");
     }
 
-    public GeneratorOptions setInputSpec(String inputSpec) {
+    public CodegenConfigurator setInputSpec(String inputSpec) {
         this.inputSpec = inputSpec;
         return this;
     }
@@ -67,7 +63,7 @@ public class GeneratorOptions implements Serializable {
         return inputSpec;
     }
 
-    public GeneratorOptions setInvokerPackage(String invokerPackage) {
+    public CodegenConfigurator setInvokerPackage(String invokerPackage) {
         this.invokerPackage = invokerPackage;
         return this;
     }
@@ -80,14 +76,16 @@ public class GeneratorOptions implements Serializable {
         return outputDir;
     }
 
-    public GeneratorOptions setOutputDir(String outputDir) {
+    public CodegenConfigurator setOutputDir(String outputDir) {
         this.outputDir = toAbsolutePathStr(outputDir);
         return this;
     }
 
-    public String getModelPackage() { return modelPackage; }
+    public String getModelPackage() {
+        return modelPackage;
+    }
 
-    public GeneratorOptions setModelPackage(String modelPackage) {
+    public CodegenConfigurator setModelPackage(String modelPackage) {
         this.modelPackage = modelPackage;
         return this;
     }
@@ -96,7 +94,7 @@ public class GeneratorOptions implements Serializable {
         return verbose;
     }
 
-    public GeneratorOptions setVerbose(boolean verbose) {
+    public CodegenConfigurator setVerbose(boolean verbose) {
         this.verbose = verbose;
         return this;
     }
@@ -105,7 +103,7 @@ public class GeneratorOptions implements Serializable {
         return skipOverwrite;
     }
 
-    public GeneratorOptions setSkipOverwrite(boolean skipOverwrite) {
+    public CodegenConfigurator setSkipOverwrite(boolean skipOverwrite) {
         this.skipOverwrite = skipOverwrite;
         return this;
     }
@@ -114,7 +112,7 @@ public class GeneratorOptions implements Serializable {
         return templateDir;
     }
 
-    public GeneratorOptions setTemplateDir(String templateDir) {
+    public CodegenConfigurator setTemplateDir(String templateDir) {
         File f = new File(templateDir);
 
         // check to see if the folder exists
@@ -130,7 +128,7 @@ public class GeneratorOptions implements Serializable {
         return auth;
     }
 
-    public GeneratorOptions setAuth(String auth) {
+    public CodegenConfigurator setAuth(String auth) {
         this.auth = auth;
         return this;
     }
@@ -139,7 +137,7 @@ public class GeneratorOptions implements Serializable {
         return apiPackage;
     }
 
-    public GeneratorOptions setApiPackage(String apiPackage) {
+    public CodegenConfigurator setApiPackage(String apiPackage) {
         this.apiPackage = apiPackage;
         return this;
     }
@@ -148,7 +146,7 @@ public class GeneratorOptions implements Serializable {
         return groupId;
     }
 
-    public GeneratorOptions setGroupId(String groupId) {
+    public CodegenConfigurator setGroupId(String groupId) {
         this.groupId = groupId;
         return this;
     }
@@ -157,7 +155,7 @@ public class GeneratorOptions implements Serializable {
         return artifactId;
     }
 
-    public GeneratorOptions setArtifactId(String artifactId) {
+    public CodegenConfigurator setArtifactId(String artifactId) {
         this.artifactId = artifactId;
         return this;
     }
@@ -166,7 +164,7 @@ public class GeneratorOptions implements Serializable {
         return artifactVersion;
     }
 
-    public GeneratorOptions setArtifactVersion(String artifactVersion) {
+    public CodegenConfigurator setArtifactVersion(String artifactVersion) {
         this.artifactVersion = artifactVersion;
         return this;
     }
@@ -179,10 +177,12 @@ public class GeneratorOptions implements Serializable {
         return this.swagger;
     }
 
-    public Generator getGenerator() { return this.genInst; }
+    public CodegenConfigJDI getGenerator() {
+        return this.genInst;
+    }
 
     public static List<AuthorizationValue> parseAuth(String urlEncodedAuthStr) {
-        List<AuthorizationValue> auths = new ArrayList<AuthorizationValue>();
+        List<AuthorizationValue> auths = new ArrayList<>();
         if (isNotEmpty(urlEncodedAuthStr)) {
             String[] parts = urlEncodedAuthStr.split(",");
             for (String part : parts) {
@@ -217,7 +217,7 @@ public class GeneratorOptions implements Serializable {
         return path;
     }
 
-    public GeneratorOptions build() {
+    public CodegenConfigurator build() {
 
         setVerboseFlags();
 
@@ -228,9 +228,9 @@ public class GeneratorOptions implements Serializable {
             throw new RuntimeException("The swagger specification supplied was not valid");
         }
 
-        ServiceLoader<Generator> loader = ServiceLoader.load(Generator.class);
+        ServiceLoader<CodegenConfigJDI> loader = ServiceLoader.load(CodegenConfigJDI.class);
 
-        for (Generator config : loader) {
+        for (CodegenConfigJDI config : loader) {
             if (config.getName().equals("java")) {
                 genInst = config;
             }
@@ -239,7 +239,7 @@ public class GeneratorOptions implements Serializable {
         if (genInst == null) {
             // else try to load directly
             try {
-                genInst = (Generator) Class.forName("java").newInstance();
+                genInst = (CodegenConfigJDI) Class.forName("java").newInstance();
             } catch (Exception e) {
                 throw new RuntimeException("Can't load config class with name ".concat("java"), e);
             }
@@ -249,19 +249,19 @@ public class GeneratorOptions implements Serializable {
         genInst.setOutputDir(outputDir);
         genInst.setSkipOverwrite(skipOverwrite);
 
-        checkAndSetAdditionalProperty(apiPackage, GeneratorConstants.API_PACKAGE);
-        checkAndSetAdditionalProperty(modelPackage, GeneratorConstants.MODEL_PACKAGE);
-        checkAndSetAdditionalProperty(invokerPackage, GeneratorConstants.INVOKER_PACKAGE);
-        checkAndSetAdditionalProperty(groupId, GeneratorConstants.GROUP_ID);
-        checkAndSetAdditionalProperty(artifactId, GeneratorConstants.ARTIFACT_ID);
-        checkAndSetAdditionalProperty(artifactVersion, GeneratorConstants.ARTIFACT_VERSION);
-        checkAndSetAdditionalProperty(templateDir, toAbsolutePathStr(templateDir), GeneratorConstants.TEMPLATE_DIR);
-        checkAndSetAdditionalProperty(modelNamePrefix, GeneratorConstants.MODEL_NAME_PREFIX);
-        checkAndSetAdditionalProperty(modelNameSuffix, GeneratorConstants.MODEL_NAME_SUFFIX);
-        checkAndSetAdditionalProperty(gitUserId, GeneratorConstants.GIT_USER_ID);
-        checkAndSetAdditionalProperty(gitRepoId, GeneratorConstants.GIT_REPO_ID);
-        checkAndSetAdditionalProperty(releaseNote, GeneratorConstants.RELEASE_NOTE);
-        checkAndSetAdditionalProperty(httpUserAgent, GeneratorConstants.HTTP_USER_AGENT);
+        checkAndSetAdditionalProperty(apiPackage, CodegenConstants.API_PACKAGE);
+        checkAndSetAdditionalProperty(modelPackage, CodegenConstants.MODEL_PACKAGE);
+        checkAndSetAdditionalProperty(invokerPackage, CodegenConstants.INVOKER_PACKAGE);
+        checkAndSetAdditionalProperty(groupId, CodegenConstants.GROUP_ID);
+        checkAndSetAdditionalProperty(artifactId, CodegenConstants.ARTIFACT_ID);
+        checkAndSetAdditionalProperty(artifactVersion, CodegenConstants.ARTIFACT_VERSION);
+        checkAndSetAdditionalProperty(templateDir, toAbsolutePathStr(templateDir), CodegenConstants.TEMPLATE_DIR);
+        checkAndSetAdditionalProperty(modelNamePrefix, CodegenConstants.MODEL_NAME_PREFIX);
+        checkAndSetAdditionalProperty(modelNameSuffix, CodegenConstants.MODEL_NAME_SUFFIX);
+        checkAndSetAdditionalProperty(gitUserId, CodegenConstants.GIT_USER_ID);
+        checkAndSetAdditionalProperty(gitRepoId, CodegenConstants.GIT_REPO_ID);
+        checkAndSetAdditionalProperty(releaseNote, CodegenConstants.RELEASE_NOTE);
+        checkAndSetAdditionalProperty(httpUserAgent, CodegenConstants.HTTP_USER_AGENT);
 
         genInst.additionalProperties().putAll(additionalProperties);
 
