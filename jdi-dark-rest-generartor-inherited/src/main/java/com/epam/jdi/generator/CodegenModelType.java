@@ -1,9 +1,6 @@
 package com.epam.jdi.generator;
 
-import io.swagger.codegen.CodegenModel;
-import io.swagger.codegen.CodegenParameter;
-import io.swagger.codegen.CodegenProperty;
-import io.swagger.codegen.CodegenResponse;
+import io.swagger.codegen.*;
 
 public enum CodegenModelType {
 

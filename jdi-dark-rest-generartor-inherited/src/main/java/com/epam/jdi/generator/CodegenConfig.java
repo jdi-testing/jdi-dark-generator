@@ -1,5 +1,6 @@
 package com.epam.jdi.generator;
 
+import io.swagger.codegen.CodegenOperation;
 import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
