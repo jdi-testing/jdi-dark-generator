@@ -2,10 +2,7 @@ package com.epam.jdi.generator;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import io.swagger.codegen.CodegenConstants;
-import io.swagger.codegen.CodegenModel;
-import io.swagger.codegen.CodegenOperation;
-import io.swagger.codegen.SupportingFile;
+import io.swagger.codegen.*;
 import io.swagger.models.*;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.util.Json;
@@ -17,7 +14,7 @@ import org.joda.time.DateTime;
 import java.io.*;
 import java.util.*;
 
-public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
+public class DefaultGeneratorJDI extends DefaultGenerator {
     protected CodegenConfigurator opts;
     protected CodegenConfigJDI config;
 
@@ -178,6 +175,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void generateModels(List<File> files, List<Object> allModels) {
 
         if (!isGenerateModels) {
@@ -359,12 +357,12 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         for (Tag tag : tags) {
             try {
                 CodegenOperation codegenOperation = config.fromOperationJDI(resourcePath, httpMethod, operation, swagger.getDefinitions(), swagger);
-                codegenOperation.tags = new ArrayList<Tag>(tags);
+                codegenOperation.tags = new ArrayList<>(tags);
                 config.addOperationToGroupJDI(config.sanitizeTag(tag.getName()), resourcePath, operation, codegenOperation, operations);
 
                 List<Map<String, List<String>>> securities = operation.getSecurity();
                 if (securities == null && swagger.getSecurity() != null) {
-                    securities = new ArrayList<Map<String, List<String>>>();
+                    securities = new ArrayList<>();
                     for (SecurityRequirement sr : swagger.getSecurity()) {
                         securities.add(sr.getRequirements());
                     }
@@ -379,9 +377,9 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
                 throw new RuntimeException(msg, ex);
             }
         }
-
     }
 
+    @SuppressWarnings("unchecked")
     protected Map<String, Object> processOperations(CodegenConfigJDI config, String tag, List<CodegenOperation> ops, List<Object> allModels) {
         Map<String, Object> operations = new HashMap<String, Object>();
         Map<String, Object> objs = new HashMap<String, Object>();
@@ -389,9 +387,9 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         objs.put("pathPrefix", config.toApiVarName(tag));
 
         // check for operationId uniqueness
-        Set<String> opIds = new HashSet<String>();
+        Set<String> opIds = new HashSet<>();
         int counter = 0;
-        for (io.swagger.codegen.CodegenOperation op : ops) {
+        for (CodegenOperation op : ops) {
             String opId = op.nickname;
             if (opIds.contains(opId)) {
                 counter++;
@@ -405,8 +403,8 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         operations.put("package", config.apiPackage());
 
 
-        Set<String> allImports = new TreeSet<String>();
-        for (io.swagger.codegen.CodegenOperation op : ops) {
+        Set<String> allImports = new TreeSet<>();
+        for (CodegenOperation op : ops) {
             allImports.addAll(op.imports);
         }
 
@@ -434,16 +432,17 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         config.postProcessOperations(operations);
         config.postProcessOperationsWithModels(operations, allModels);
         if (objs.size() > 0) {
-            List<io.swagger.codegen.CodegenOperation> os = (List<io.swagger.codegen.CodegenOperation>) objs.get("operation");
+            List<CodegenOperation> os = (List<CodegenOperation>) objs.get("operation");
 
             if (os != null && os.size() > 0) {
-                io.swagger.codegen.CodegenOperation op = os.get(os.size() - 1);
+                CodegenOperation op = os.get(os.size() - 1);
                 op.hasMore = false;
             }
         }
         return operations;
     }
 
+    @SuppressWarnings("unchecked")
     protected void generateApis(List<File> files, List<Object> allOperations, List<Object> allModels) {
         if (!isGenerateApis) {
             return;
@@ -466,12 +465,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         for (String tag : paths.keySet()) {
             try {
                 List<CodegenOperation> ops = paths.get(tag);
-                Collections.sort(ops, new Comparator<CodegenOperation>() {
-                    @Override
-                    public int compare(CodegenOperation one, CodegenOperation another) {
-                        return ObjectUtils.compare(one.operationId, another.operationId);
-                    }
-                });
+                ops.sort((one, another) -> ObjectUtils.compare(one.operationId, another.operationId));
                 Map<String, Object> operation = processOperations(config, tag, ops, allModels);
 
                 operation.put("hostWithoutBasePath", getHostWithoutBasePath());
@@ -488,7 +482,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
                 operation.put("classFilename", config.toApiFilename(tag));
                 operation.put("endPointName", config.toEndpointVarName(tag));
 
-                allOperations.add(new HashMap<String, Object>(operation));
+                allOperations.add(new HashMap<>(operation));
                 for (int i = 0; i < allOperations.size(); i++) {
                     Map<String, Object> oo = (Map<String, Object>) allOperations.get(i);
                     if (i < (allOperations.size() - 1)) {
@@ -547,7 +541,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
         if (supportingFiles != null && supportingFiles.equalsIgnoreCase("true")) {
             generateAll = true;
         } else if (supportingFiles != null && !supportingFiles.isEmpty()) {
-            supportingFilesToGenerate = new HashSet<String>(Arrays.asList(supportingFiles.split(",")));
+            supportingFilesToGenerate = new HashSet<>(Arrays.asList(supportingFiles.split(",")));
         }
 
         for (SupportingFile support : config.supportingFiles()) {
@@ -581,12 +575,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
                     Mustache.Compiler compiler = Mustache.compiler();
                     compiler = config.processCompiler(compiler);
                     Template tmpl = compiler
-                            .withLoader(new Mustache.TemplateLoader() {
-                                @Override
-                                public Reader getTemplate(String name) {
-                                    return getTemplateReader(getFullTemplateFile(config, name + ".mustache"));
-                                }
-                            })
+                            .withLoader(name -> getTemplateReader(getFullTemplateFile(config, name + ".mustache")))
                             .defaultValue("")
                             .compile(template);
 
@@ -625,8 +614,7 @@ public class DefaultGenerator extends io.swagger.codegen.DefaultGenerator {
 
     protected Map<String, Object> buildSupportFileBundle(List<Object> allOperations, List<Object> allModels) {
 
-        Map<String, Object> bundle = new HashMap<String, Object>();
-        bundle.putAll(config.additionalProperties());
+        Map<String, Object> bundle = new HashMap<>(config.additionalProperties());
         bundle.put("apiPackage", config.apiPackage());
 
         Map<String, Object> apis = new HashMap<String, Object>();

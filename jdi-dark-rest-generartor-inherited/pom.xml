@@ -45,7 +45,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.epam.jdi.generator.SwaggerCodegen</mainClass>
+                            <mainClass>com.epam.jdi.generator.SwaggerCodegenJDI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

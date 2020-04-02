@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
+public class DefaultCodegenJDI extends DefaultCodegen {
 
     protected String invokerPackage;
     protected Map<String, Object> vendorExtensions = new HashMap<String, Object>();
@@ -34,7 +34,7 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
     }
 
     private void addParentContainer(CodegenModel m, String name, Property property) {
-        final io.swagger.codegen.CodegenProperty tmp = fromProperty(name, property);
+        final CodegenProperty tmp = fromProperty(name, property);
         addImport(m, tmp.complexType);
         m.parent = toInstantiationType(property);
         final String containerType = tmp.containerType;
@@ -220,11 +220,11 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
 
             // child model (properties owned by the model itself)
             Model child = composed.getChild();
-            if (child != null && child instanceof RefModel && allDefinitions != null) {
+            if (child instanceof RefModel && allDefinitions != null) {
                 final String childRef = ((RefModel) child).getSimpleRef();
                 child = allDefinitions.get(childRef);
             }
-            if (child != null && child instanceof ModelImpl) {
+            if (child instanceof ModelImpl) {
                 addProperties(properties, required, child, allDefinitions);
                 if (supportsInheritance) {
                     addProperties(allProperties, allRequired, child, allDefinitions);
@@ -313,7 +313,7 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
      * @param swagger     a Swagger object representing the spec
      * @return Codegen Operation object
      */
-    public CodegenOperation fromOperationExt(String path,
+    public CodegenOperation fromOperationJDI(String path,
                                              String httpMethod,
                                              Operation operation,
                                              Map<String, Model> definitions,
@@ -382,8 +382,6 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
             if (operation.getProduces().size() > 0) {
                 // use produces defined in the operation
                 produces = operation.getProduces();
-            } else {
-                // empty list, do nothing to override global setting
             }
         } else if (swagger != null && swagger.getProduces() != null && swagger.getProduces().size() > 0) {
             // use produces defined globally
@@ -566,13 +564,10 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
 
         // move "required" parameters in front of "optional" parameters
         if (sortParamsByRequiredFlag) {
-            Collections.sort(allParams, new Comparator<CodegenParameter>() {
-                @Override
-                public int compare(CodegenParameter one, CodegenParameter another) {
-                    if (one.required == another.required) return 0;
-                    else if (one.required) return -1;
-                    else return 1;
-                }
+            allParams.sort((one, another) -> {
+                if (one.required == another.required) return 0;
+                else if (one.required) return -1;
+                else return 1;
             });
         }
 
@@ -642,11 +637,7 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
      */
     @SuppressWarnings("static-method")
     public void addOperationToGroupJDI(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
-        List<CodegenOperation> opList = operations.get(tag);
-        if (opList == null) {
-            opList = new ArrayList<CodegenOperation>();
-            operations.put(tag, opList);
-        }
+        List<CodegenOperation> opList = operations.computeIfAbsent(tag, k -> new ArrayList<>());
         // check for operationId uniqueness
 
         String uniqueName = co.operationId;
@@ -710,7 +701,7 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
                 LOGGER.warn("null property for " + key);
             } else {
                 final CodegenProperty cp = fromProperty(key, prop);
-                cp.required = mandatory.contains(key) ? true : false;
+                cp.required = mandatory.contains(key);
                 m.hasRequired = m.hasRequired || cp.required;
                 m.hasOptional = m.hasOptional || !cp.required;
                 if (cp.isEnum) {
@@ -770,7 +761,7 @@ public class DefaultCodegen extends io.swagger.codegen.DefaultCodegen {
                     m.readWriteVars.add(cp);
                 }
 
-                if (m.discriminator != null && cp.name.equals(m.discriminator) && cp.isEnum) {
+                if (cp.name.equals(m.discriminator) && cp.isEnum) {
                     m.vendorExtensions.put("x-discriminator-is-enum", true);
                 }
             }

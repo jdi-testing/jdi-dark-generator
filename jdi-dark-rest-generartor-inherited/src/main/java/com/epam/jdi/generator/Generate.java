@@ -118,6 +118,6 @@ public class Generate implements Runnable {
             opts.setAuth(auth);
         }
 
-        new DefaultGenerator().generate(opts.build());
+        new DefaultGeneratorJDI().generate(opts.build());
     }
 }

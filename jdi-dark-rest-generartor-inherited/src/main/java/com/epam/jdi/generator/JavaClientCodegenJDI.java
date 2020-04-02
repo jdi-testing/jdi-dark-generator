@@ -41,27 +41,23 @@ public class JavaClientCodegenJDI extends AbstractJavaCodegenJDI {
 
     }
 
-    @Override
     public CodegenType getTag() {
         return CodegenType.CLIENT;
     }
 
-    @Override
     public String getName() {
         return "java";
     }
 
-    @Override
     public String getHelp() {
         return "Generates a Java client library.";
     }
 
-    @Override
     public void processOpts() {
         super.processOpts();
 
         if (additionalProperties.containsKey(PARCELABLE_MODEL)) {
-            this.setParcelableModel(Boolean.valueOf(additionalProperties.get(PARCELABLE_MODEL).toString()));
+            this.setParcelableModel(Boolean.parseBoolean(additionalProperties.get(PARCELABLE_MODEL).toString()));
         }
         // put the boolean value back to PARCELABLE_MODEL in additionalProperties
         additionalProperties.put(PARCELABLE_MODEL, parcelableModel);
@@ -95,20 +91,16 @@ public class JavaClientCodegenJDI extends AbstractJavaCodegenJDI {
         supportingFiles.add(new SupportingFile("pomproperties.mustache", "src/test/resources", "pom.properties"));
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         super.postProcessOperations(objs);
 
         return objs;
     }
 
-    @Override
     public String apiFilename(String templateName, String tag) {
         return super.apiFilename(templateName, tag);
     }
 
-    @Override
     public String toEndpointVarName(String name) {
         return super.toEndpointVarName(name);
     }
@@ -116,14 +108,12 @@ public class JavaClientCodegenJDI extends AbstractJavaCodegenJDI {
     private static boolean isMultipartType(List<Map<String, String>> consumes) {
         Map<String, String> firstType = consumes.get(0);
         if (firstType != null) {
-            if ("multipart/form-data".equals(firstType.get(MEDIA_TYPE))) {
-                return true;
-            }
+            return "multipart/form-data".equals(firstType.get(MEDIA_TYPE));
         }
         return false;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     public Map<String, Object> postProcessModelsEnum(Map<String, Object> objs) {
         objs = super.postProcessModelsEnum(objs);
         //Needed import for Gson based libraries

@@ -18,8 +18,7 @@ import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
 
-
-public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements CodegenConfigJDI {
+public abstract class AbstractJavaCodegenJDI extends DefaultCodegenJDI implements CodegenConfigJDI {
 
     static Logger LOGGER = LoggerFactory.getLogger(AbstractJavaCodegenJDI.class);
     public static final String FULL_JAVA_UTIL = "fullJavaUtil";
@@ -120,7 +119,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         cliOptions.add(CliOption.newBoolean(DISABLE_HTML_ESCAPING, "Disable HTML escaping of JSON strings when using gson (needed to avoid problems with byte[] fields)"));
     }
 
-    @Override
     public void processOpts() {
         super.processOpts();
 
@@ -288,7 +286,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         }
     }
 
-    @Override
     public String escapeReservedWord(String name) {
         if (this.reservedWordsMappings().containsKey(name)) {
             return this.reservedWordsMappings().get(name);
@@ -296,47 +293,40 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return "_" + name;
     }
 
-    @Override
     public String apiFileFolder() {
         return outputFolder + "/" + sourceFolder + "/" + apiPackage().replace('.', '/');
     }
 
-    @Override
+
     public String apiTestFileFolder() {
         return outputFolder + "/" + testFolder + "/" + apiPackage().replace('.', '/');
     }
 
-    @Override
     public String modelFileFolder() {
         return outputFolder + "/" + sourceFolder + "/" + modelPackage().replace('.', '/');
     }
 
-    @Override
     public String apiDocFileFolder() {
         return (outputFolder + "/" + apiDocPath).replace('/', File.separatorChar);
     }
 
-    @Override
     public String modelDocFileFolder() {
         return (outputFolder + "/" + modelDocPath).replace('/', File.separatorChar);
     }
 
-    @Override
+
     public String toApiDocFilename(String name) {
         return toApiName(name);
     }
 
-    @Override
     public String toModelDocFilename(String name) {
         return toModelName(name);
     }
 
-    @Override
     public String toApiTestFilename(String name) {
         return toApiName(name) + "Test";
     }
 
-    @Override
     public String toApiName(String name) {
         if (name.length() == 0) {
             return "DefaultApi";
@@ -351,12 +341,10 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return name.toUpperCase();
     }
 
-    @Override
     public String toApiFilename(String name) {
         return toApiName(name);
     }
 
-    @Override
     public String toVarName(String name) {
         // sanitize name
         name = sanitizeName(name); // FIXME: a parameter should not be assigned. Also declare the methods parameters as 'final'.
@@ -398,7 +386,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return startsWithTwoUppercaseLetters;
     }
 
-    @Override
     public String toParamName(String name) {
         // to avoid conflicts with 'callback' parameter for async call
         if ("callback".equals(name)) {
@@ -409,7 +396,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return toVarName(name);
     }
 
-    @Override
     public String toModelName(final String name) {
         // We need to check if import-mapping has a different model for this class, so we use it
         // instead of the auto-generated one.
@@ -449,13 +435,11 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return camelizedName;
     }
 
-    @Override
     public String toModelFilename(String name) {
         // should be the same as the model name
         return toModelName(name);
     }
 
-    @Override
     public String getTypeDeclaration(Property p) {
         if (p instanceof ArrayProperty) {
             ArrayProperty ap = (ArrayProperty) p;
@@ -479,7 +463,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return super.getTypeDeclaration(p);
     }
 
-    @Override
     public String getAlias(String name) {
         if (typeAliases != null && typeAliases.containsKey(name)) {
             return typeAliases.get(name);
@@ -487,7 +470,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return name;
     }
 
-    @Override
     public String toDefaultValue(Property p) {
         if (p instanceof ArrayProperty) {
             final ArrayProperty ap = (ArrayProperty) p;
@@ -504,7 +486,7 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
             String typeDeclaration = getTypeDeclaration(ap.getItems());
             Object java8obj = additionalProperties.get("java8");
             if (java8obj != null) {
-                Boolean java8 = Boolean.valueOf(java8obj.toString());
+                boolean java8 = Boolean.parseBoolean(java8obj.toString());
                 if (java8) {
                     typeDeclaration = "";
                 }
@@ -526,7 +508,7 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
             String typeDeclaration = String.format("String, %s", getTypeDeclaration(ap.getAdditionalProperties()));
             Object java8obj = additionalProperties.get("java8");
             if (java8obj != null) {
-                Boolean java8 = Boolean.valueOf(java8obj.toString());
+                boolean java8 = Boolean.parseBoolean(java8obj.toString());
                 if (java8) {
                     typeDeclaration = "";
                 }
@@ -579,7 +561,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return super.toDefaultValue(p);
     }
 
-    @Override
     public void setParameterExampleValue(CodegenParameter p) {
         String example;
 
@@ -655,7 +636,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         p.example = example;
     }
 
-    @Override
     public String toExampleValue(Property p) {
         if (p.getExample() != null) {
             return escapeText(p.getExample().toString());
@@ -664,7 +644,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         }
     }
 
-    @Override
     public String getSwaggerType(Property p) {
         String swaggerType = super.getSwaggerType(p);
 
@@ -681,7 +660,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return toModelName(swaggerType);
     }
 
-    @Override
     public String toOperationId(String operationId) {
         // throw exception if method name is empty
         if (StringUtils.isEmpty(operationId)) {
@@ -700,7 +678,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return operationId;
     }
 
-    @Override
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         if (codegenModel.description != null) {
@@ -718,11 +695,10 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return codegenModel;
     }
 
-    @Override
     public void postProcessParameter(CodegenParameter parameter) {
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     public Map<String, Object> postProcessModels(Map<String, Object> objs) {
         // recursively add import for mapping one type to multiple imports
         List<Map<String, String>> recursiveImports = (List<Map<String, String>>) objs.get("imports");
@@ -744,7 +720,7 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return postProcessModelsEnum(objs);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         // Remove imports of List, ArrayList, Map and HashMap as they are
         // imported in the template already.
@@ -759,7 +735,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return objs;
     }
 
-    @Override
     public void preprocessSwagger(Swagger swagger) {
         if (swagger == null || swagger.getPaths() == null) {
             return;
@@ -817,17 +792,14 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return accepts;
     }
 
-    @Override
     protected boolean needToImport(String type) {
-        return super.needToImport(type) && type.indexOf(".") < 0;
+        return super.needToImport(type) && !type.contains(".");
     }
 
-    @Override
     public String toEnumName(CodegenProperty property) {
         return sanitizeName(camelize(property.name)) + "Enum";
     }
 
-    @Override
     public String toEnumVarName(String value, String datatype) {
         if (value.length() == 0) {
             return "EMPTY";
@@ -857,7 +829,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         }
     }
 
-    @Override
     public String toEnumValue(String value, String datatype) {
         if ("Integer".equals(datatype) || "Double".equals(datatype)) {
             return value;
@@ -873,7 +844,7 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
     }
 
     public CodegenOperation fromOperationJDI(String path, String httpMethod, Operation operation, Map<String, Model> definitions, Swagger swagger) {
-        CodegenOperation op = super.fromOperationExt(path, httpMethod, operation, definitions, swagger);
+        CodegenOperation op = super.fromOperationJDI(path, httpMethod, operation, definitions, swagger);
         op.path = sanitizePath(op.path);
         return op;
     }
@@ -928,7 +899,7 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
 
     private static String sanitizePackageName(String packageName) {
         packageName = packageName.trim(); // FIXME: a parameter should not be assigned. Also declare the methods parameters as 'final'.
-        packageName = packageName.replaceAll("[^a-zA-Z0-9_\\.]", "_");
+        packageName = packageName.replaceAll("[^a-zA-Z0-9_.]", "_");
         if (Strings.isNullOrEmpty(packageName)) {
             return "invalidPackageName";
         }
@@ -996,13 +967,11 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return p.replaceAll("\"", "%22");
     }
 
-    @Override
     public String escapeQuotationMark(String input) {
         // remove " to avoid code injection
         return input.replace("\"", "");
     }
 
-    @Override
     public String escapeUnsafeCharacters(String input) {
         return input.replace("*/", "*_/").replace("/*", "/_*");
     }
@@ -1053,7 +1022,6 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
         return getterAndSetterCapitalize(name);
     }
 
-    @Override
     public String sanitizeTag(String tag) {
         tag = camelize(underscore(sanitizeName(tag)));
 
@@ -1067,5 +1035,4 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegen implements C
     public boolean defaultIgnoreImportMappingOption() {
         return true;
     }
-
 }
