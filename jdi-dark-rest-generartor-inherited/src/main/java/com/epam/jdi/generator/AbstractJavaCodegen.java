@@ -70,7 +70,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
                         "native", "super", "while", "null")
         );
 
-        languageSpecificPrimitives = new HashSet<String>(
+        languageSpecificPrimitives = new HashSet<>(
                 Arrays.asList(
                         "String",
                         "boolean",
@@ -417,9 +417,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
             return importMapping.get(name);
         }
 
-        final String sanitizedName = sanitizeName(name);
-
-        String nameWithPrefixSuffix = sanitizedName;
+        String nameWithPrefixSuffix = sanitizeName(name);
         if (!StringUtils.isEmpty(modelNamePrefix)) {
             // add '_' so that model name can be camelized correctly
             nameWithPrefixSuffix = modelNamePrefix + "_" + nameWithPrefixSuffix;
@@ -507,7 +505,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
             Object java8obj = additionalProperties.get("java8");
             if (java8obj != null) {
                 Boolean java8 = Boolean.valueOf(java8obj.toString());
-                if (java8 != null && java8) {
+                if (java8) {
                     typeDeclaration = "";
                 }
             }
@@ -529,7 +527,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
             Object java8obj = additionalProperties.get("java8");
             if (java8obj != null) {
                 Boolean java8 = Boolean.valueOf(java8obj.toString());
-                if (java8 != null && java8) {
+                if (java8) {
                     typeDeclaration = "";
                 }
             }
@@ -715,7 +713,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         if (allDefinitions != null && codegenModel.parentSchema != null && codegenModel.hasEnums) {
             final Model parentModel = allDefinitions.get(codegenModel.parentSchema);
             final CodegenModel parentCodegenModel = super.fromModel(codegenModel.parent, parentModel);
-            codegenModel = AbstractJavaCodegen.reconcileInlineEnums(codegenModel, parentCodegenModel);
+            return AbstractJavaCodegen.reconcileInlineEnums(codegenModel, parentCodegenModel);
         }
         return codegenModel;
     }
@@ -921,7 +919,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
             int count = 0, numVars = codegenProperties.size();
             for (CodegenProperty codegenProperty : codegenProperties) {
                 count += 1;
-                codegenProperty.hasMore = (count < numVars) ? true : false;
+                codegenProperty.hasMore = count < numVars;
             }
             codegenModel.vars = codegenProperties;
         }
@@ -1035,7 +1033,7 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
     public boolean convertPropertyToBoolean(String propertyKey) {
         boolean booleanValue = false;
         if (additionalProperties.containsKey(propertyKey)) {
-            booleanValue = Boolean.valueOf(additionalProperties.get(propertyKey).toString());
+            booleanValue = Boolean.parseBoolean(additionalProperties.get(propertyKey).toString());
         }
 
         return booleanValue;
