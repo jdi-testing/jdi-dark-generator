@@ -36,25 +36,19 @@ public class {{classname}} {
   {{/isDeprecated}}
   @ContentType({{enumMedia}})
   {{#queryParams.0}}
-  @QueryParameters({
   {{#queryParams}}
-      @QueryParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}},{{/-last}}
+  @QueryParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
   {{/queryParams}}
-  })
   {{/queryParams.0}}
   {{#formParams.0}}
-  @FormParameters({
   {{#formParams}}
-      @FormParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}},{{/-last}}
+  @FormParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
   {{/formParams}}
-  })
   {{/formParams.0}}
   {{#headerParams.0}}
-  @Headers({
   {{#headerParams}}
-      @Header(name = "{{paramName}}", value = "{{testExample}}"){{^-last}},{{/-last}}
+  @Header(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
   {{/headerParams}}
-  })
   {{/headerParams.0}}
   @{{httpMethod}}("{{path}}")
   public static RestMethod {{operationId}}{{enumMedia}};
@@ -64,25 +58,19 @@ public class {{classname}} {
   @Deprecated
   {{/isDeprecated}}
   {{#queryParams.0}}
-  @QueryParameters({
   {{#queryParams}}
-      @QueryParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}},{{/-last}}
+  @QueryParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
   {{/queryParams}}
-  })
   {{/queryParams.0}}
   {{#formParams.0}}
-  @FormParameters({
   {{#formParams}}
-      @FormParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}},{{/-last}}
+  @FormParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
   {{/formParams}}
-  })
   {{/formParams.0}}
   {{#headerParams.0}}
-  @Headers({
   {{#headerParams}}
-      @Header(name = "{{paramName}}", value = "{{testExample}}"){{^-last}},{{/-last}}
+  @Header(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
   {{/headerParams}}
-  })
   {{/headerParams.0}}
   @{{httpMethod}}("{{path}}")
   public static RestMethod {{operationId}}{{enumMedia}};

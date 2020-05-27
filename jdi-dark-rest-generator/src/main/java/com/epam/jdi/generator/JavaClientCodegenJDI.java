@@ -88,7 +88,7 @@ public class JavaClientCodegenJDI extends AbstractJavaCodegenJDI {
         //supportingFiles.add(new SupportingFile("gitignore.mustache", "", ".gitignore"));
         supportingFiles.add(new SupportingFile("test.mustache", "src/test/resources", "test.properties"));
         supportingFiles.add(new SupportingFile("general.mustache", "src/test/resources", "general.xml"));
-        supportingFiles.add(new SupportingFile("pomproperties.mustache", "src/test/resources", "pom.properties"));
+        supportingFiles.add(new SupportingFile("env.properties.mustache", "src/test/resources", "pom.properties"));
     }
 
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {

@@ -26,18 +26,18 @@ public class {{classname}}Test {
     {{#consumes}}
     @Test
     public void {{operationId}}{{enumMedia}}Test() {
+        // TODO: add call parameters and test validations
         RestResponse resp = {{classname}}.{{operationId}}{{enumMedia}}.call();
         resp.isOk();
-        // TODO: test validations
     }
     {{/consumes}}
     {{^consumes}}
-        @Test
-        public void {{operationId}}Test() {
+    @Test
+    public void {{operationId}}Test() {
+        // TODO: add call parameters and test validations
         RestResponse resp = {{classname}}.{{operationId}}.call();
         resp.isOk();
-        // TODO: test validations
-        }
+    }
     {{/consumes}}
     {{/operation}}{{/operations}}
 }
