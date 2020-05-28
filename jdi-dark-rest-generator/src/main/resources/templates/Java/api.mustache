@@ -20,9 +20,21 @@ public class {{classname}} {
   /**
    * {{summary}}
    * {{notes}}
-   {{#allParams}}
-   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-   {{/allParams}}
+   {{#pathParams}}
+   * @param {{paramName}} /path/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/pathParams}}
+   {{#queryParams}}
+   * @param {{paramName}} /query/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/queryParams}}
+   {{#headerParams}}
+   * @param {{paramName}} /header/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/headerParams}}
+   {{#cookieParams}}
+   * @param {{paramName}} /cookie/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/cookieParams}}
+   {{#bodyParam}}
+   * @param {{bodyParam}} /body/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/bodyParam}}
    {{#returnType}}
    * @return {{returnType}}
    {{/returnType}}
