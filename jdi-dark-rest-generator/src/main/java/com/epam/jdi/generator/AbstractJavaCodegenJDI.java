@@ -218,14 +218,12 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegenJDI implement
         importMapping.put("options", "com.epam.http.annotations.OPTIONS");
         importMapping.put("head", "com.epam.http.annotations.HEAD");
         importMapping.put("patch", "com.epam.http.annotations.PATCH");
-        importMapping.put("QueryParameters", "com.epam.http.annotations.QueryParameters");
         importMapping.put("QueryParameter", "com.epam.http.annotations.QueryParameter");
-        importMapping.put("FormParameters", "com.epam.http.annotations.FormParameters");
         importMapping.put("FormParameter", "com.epam.http.annotations.FormParameter");
-        importMapping.put("Headers", "com.epam.http.annotations.Headers");
         importMapping.put("Header", "com.epam.http.annotations.Header");
         importMapping.put("Cookie", "com.epam.http.annotations.Cookie");
         importMapping.put("RestMethod", "com.epam.http.requests.RestMethod");
+        importMapping.put("DataMethod", "com.epam.http.requests.DataMethod");
         importMapping.put("JSON", "static io.restassured.http.ContentType.JSON");
         importMapping.put("ANY", "static io.restassured.http.ContentType.ANY");
         importMapping.put("BINARY", "static io.restassured.http.ContentType.BINARY");
