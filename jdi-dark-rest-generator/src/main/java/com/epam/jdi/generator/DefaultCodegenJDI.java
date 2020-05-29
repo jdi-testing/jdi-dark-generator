@@ -475,6 +475,7 @@ public class DefaultCodegenJDI extends DefaultCodegen {
                         } else if ("list".equalsIgnoreCase(cm.containerType)) {
                             op.isListContainer = true;
                         } else if ("array".equalsIgnoreCase(cm.containerType)) {
+                            op.returnType = op.returnBaseType+"[]";
                             op.isListContainer = true;
                         }
                     } else {
