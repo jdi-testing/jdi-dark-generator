@@ -523,13 +523,11 @@ public class DefaultCodegenJDI extends DefaultCodegen {
                 allParams.add(p);
                 if (param instanceof QueryParameter) {
                     queryParams.add(p.copy());
-                    imports.add("QueryParameters");
                     imports.add("QueryParameter");
                 } else if (param instanceof PathParameter) {
                     pathParams.add(p.copy());
                 } else if (param instanceof HeaderParameter) {
                     headerParams.add(p.copy());
-                    imports.add("Headers");
                     imports.add("Header");
                 } else if (param instanceof CookieParameter) {
                     cookieParams.add(p.copy());
@@ -539,7 +537,6 @@ public class DefaultCodegenJDI extends DefaultCodegen {
                     bodyParams.add(p.copy());
                 } else if (param instanceof FormParameter) {
                     formParams.add(p.copy());
-                    imports.add("FormParameters");
                     imports.add("FormParameter");
                 }
 

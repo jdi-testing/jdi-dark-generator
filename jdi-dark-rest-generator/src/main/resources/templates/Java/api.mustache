@@ -3,10 +3,10 @@ package {{package}};
 
 import com.epam.http.annotations.ServiceDomain;
 import com.epam.http.requests.RestMethod;
-
-{{#imports}}import {{import}};
+import com.epam.http.requests.DataMethod;
+{{#imports}}
+import {{import}};
 {{/imports}}
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,22 +21,22 @@ public class {{classname}} {
    * {{summary}}
    * {{notes}}
    {{#pathParams}}
-   * @param {{paramName}} /path/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   * @param {{paramName}} /path/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
    {{/pathParams}}
    {{#queryParams}}
-   * @param {{paramName}} /query/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   * @param {{paramName}} /query/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
    {{/queryParams}}
    {{#headerParams}}
-   * @param {{paramName}} /header/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   * @param {{paramName}} /header/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
    {{/headerParams}}
    {{#cookieParams}}
-   * @param {{paramName}} /cookie/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   * @param {{paramName}} /cookie/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
    {{/cookieParams}}
    {{#bodyParam}}
-   * @param {{bodyParam}} /body/ {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   * @param {{bodyParam}} /body/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
    {{/bodyParam}}
    {{#returnType}}
-   * @return {{returnType}}
+   * @return {{{returnType}}}
    {{/returnType}}
    {{#isDeprecated}}
    * @deprecated
@@ -63,7 +63,12 @@ public class {{classname}} {
   {{/headerParams}}
   {{/headerParams.0}}
   @{{httpMethod}}("{{path}}")
+  {{#returnType}}
+  public static DataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
+  {{/returnType}}
+  {{^returnType}}
   public static RestMethod {{operationId}}{{enumMedia}};
+  {{/returnType}}
   {{/consumes}}
   {{^hasConsumes}}
   {{#isDeprecated}}
@@ -85,7 +90,12 @@ public class {{classname}} {
   {{/headerParams}}
   {{/headerParams.0}}
   @{{httpMethod}}("{{path}}")
+  {{#returnType}}
+  public static DataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
+  {{/returnType}}
+  {{^returnType}}
   public static RestMethod {{operationId}}{{enumMedia}};
+  {{/returnType}}
   {{/hasConsumes}}
   {{/operation}}
 }
