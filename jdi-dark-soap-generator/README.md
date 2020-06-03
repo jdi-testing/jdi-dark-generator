@@ -15,6 +15,6 @@ To generate jdi-dark soap objects for your wsdl url:
     <packageName>com.epam.jdi.soap.net.yandex.speller.services.spellservice</packageName>
     ```
     
- - run maven plugin jaxws:wsimport
+  - run maven plugin jaxws:wsimport
  
  

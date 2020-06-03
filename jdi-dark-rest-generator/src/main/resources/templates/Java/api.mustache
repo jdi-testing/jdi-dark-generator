@@ -3,14 +3,10 @@ package {{package}};
 
 import com.epam.http.annotations.ServiceDomain;
 import com.epam.http.requests.RestMethod;
-import com.epam.http.requests.DataMethod;
+import com.epam.http.requests.RestDataMethod;
 {{#imports}}
 import {{import}};
 {{/imports}}
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 {{#operations}}
 @ServiceDomain("${domain}")
@@ -64,7 +60,7 @@ public class {{classname}} {
   {{/headerParams.0}}
   @{{httpMethod}}("{{path}}")
   {{#returnType}}
-  public static DataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
+  public static RestDataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
   {{/returnType}}
   {{^returnType}}
   public static RestMethod {{operationId}}{{enumMedia}};
@@ -91,7 +87,7 @@ public class {{classname}} {
   {{/headerParams.0}}
   @{{httpMethod}}("{{path}}")
   {{#returnType}}
-  public static DataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
+  public static RestDataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
   {{/returnType}}
   {{^returnType}}
   public static RestMethod {{operationId}}{{enumMedia}};
