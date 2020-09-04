@@ -1,0 +1,53 @@
+{
+
+
+  "inputSpecURL": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml",
+  "outputDir": "out222",
+
+  "invokerPackage": "aa",
+
+  "modelPackage": "aa.model",
+  "apiPackage": "aa.api",
+  "modelNamePrefix": "",
+  "modelNameSuffix": "",
+
+  "templateDir": "jdi-dark-rest-generator/out",
+
+  "flattenInlineSchema": true,
+
+  "verbose": true,
+  "skipOverwrite": "false",
+  "removeOperationIdPrefix": false,
+
+  "auth": "jjjj",
+  "useOas2": false,
+
+
+  "groupId": "io.swagger.jdi",
+  "artifactId": "swagger-java-jdi",
+  "artifactVersion": "1.0.0",
+  "ignoreFileOverride": ".swagger-codegen-ignore",
+  "serializationLibrary": "jackson",
+  "resolveFully": false,
+
+
+  "additionalProperties": {
+    "sortParamsByRequiredFlag": true,
+    "ensureUniqueParams": true,
+    "sourceFolder": "src/main/java",
+    "serializableModel": false,
+    "bigDecimalAsString": true,
+    "fullJavaUtil": true,
+    "serializationLibrary": "jackson",
+
+    "hideGenerationTimestamp": true,
+    "withXml": false,
+    "useOas2": false,
+    "dateLibrary": "joda",
+    "java8": true,
+    "useBeanValidation": false,
+    "performBeanValidation": false,
+    "useGzipFeature": false,
+    "useRuntimeException": true
+  }
+}
