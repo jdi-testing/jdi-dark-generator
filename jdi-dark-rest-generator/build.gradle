@@ -42,7 +42,7 @@ idea {
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = "6.5.1"
+    gradleVersion = "6.6.1"
 }
 
 //New gradle 6 feature. won't work with lower gradle version
@@ -101,7 +101,7 @@ dependencies {
 //    implementation 'org.openapitools:openapi-generator:4.3.1'
 //    implementation 'io.swagger:swagger-codegen:2.4.12'
 //    implementation 'io.swagger:swagger-codegen-cli:2.4.12'
-//    implementation 'io.swagger.codegen.v3:swagger-codegen:3.0.21'
+
 //    implementation 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.21'
 //    implementation 'io.rest-assured:rest-assured:4.2.0'
 //    testImplementation 'ch.qos.logback:logback-classic:1.3.0-alpha5'
