@@ -6,11 +6,6 @@ gradleLombokVersion = '3.2.0'
 
 }
 
-group = '{{groupId}}'
-version = '{{artifactVersion}}'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 plugins {
 
@@ -21,6 +16,12 @@ id "io.qameta.allure" version "2.8.1"
 id "io.franzbecker.gradle-lombok" version "${gradleLombokVersion}"
 
 }
+
+group = '{{groupId}}'
+version = '{{artifactVersion}}'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
 jcenter()
@@ -117,7 +118,7 @@ implementation 'io.rest-assured:xml-path'
 implementation 'io.qameta.allure:allure-rest-assured'
 implementation 'io.qameta.allure:allure-assertj'
 
-implementation "com.epam.jdi:jdi-dark:${dark-version}"
+implementation "com.epam.jdi:jdi-dark:${dark_version}"
 
 
 {{#joda}}
