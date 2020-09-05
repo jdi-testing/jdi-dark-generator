@@ -170,6 +170,8 @@ public CodegenOperation fromOperation(String path, String httpMethod, Operation 
         }
     }
     
+    imports.add(httpMethod);
+    
     return codegenOperation;
 }
 
