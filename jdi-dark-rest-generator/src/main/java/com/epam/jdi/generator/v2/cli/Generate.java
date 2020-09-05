@@ -51,7 +51,7 @@ private final List<String> importMappings = new ArrayList<>();
 private final List<String> reservedWordMappings = new ArrayList<>();
 
 @Option(name = {"--hide-generation-timestamp"}, title = HIDE_GENERATION_TIMESTAMP, description = HIDE_GENERATION_TIMESTAMP_DESC)
-protected Boolean hideGenerationTimestamp = true;
+protected Boolean hideGenerationTimestamp;
 
 @Option(name = {
         "-o",
@@ -298,6 +298,7 @@ private void overrideConfigWithCLIArguments(CodegenConfiguratorJDI configurator)
     }
     if (hideGenerationTimestamp != null) {
         configurator.setHideGenerationTimestamp( hideGenerationTimestamp);
+        additionalProperties.add(String.format("%s=%s", HIDE_GENERATION_TIMESTAMP, hideGenerationTimestamp));
     }
 
     if (disableExamples != null && disableExamples) {

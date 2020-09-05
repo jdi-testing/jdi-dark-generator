@@ -11,24 +11,25 @@
   "modelNamePrefix": "",
   "modelNameSuffix": "",
 
-  "templateDir": "jdi-dark-rest-generator/out",
+  "templateDir": "jdi-dark-rest-generator/src/main/resources/templates",
 
   "flattenInlineSchema": true,
 
   "verbose": true,
-  "skipOverwrite": "false",
+  "skipOverwrite": false,
   "removeOperationIdPrefix": false,
 
-  "auth": "jjjj",
+
+
   "useOas2": false,
 
 
   "groupId": "io.swagger.jdi",
   "artifactId": "swagger-java-jdi",
   "artifactVersion": "1.0.0",
-  "ignoreFileOverride": ".swagger-codegen-ignore",
-  "serializationLibrary": "jackson",
-  "resolveFully": false,
+  "ignoreFileOverride": "jdi-dark-rest-generator/src/main/resources/.swagger-codegen-ignore",
+  "serializationLibrary": "gson",
+  "resolveFully": true,
 
 
   "additionalProperties": {
@@ -37,17 +38,18 @@
     "sourceFolder": "src/main/java",
     "serializableModel": false,
     "bigDecimalAsString": true,
-    "fullJavaUtil": true,
-    "serializationLibrary": "jackson",
+    "fullJavaUtil": false,
+    "serializationLibrary": "gson",
 
-    "hideGenerationTimestamp": true,
-    "withXml": false,
+    "hideGenerationTimestamp": false,
+    "withXml": true,
     "useOas2": false,
     "dateLibrary": "joda",
     "java8": true,
-    "useBeanValidation": false,
-    "performBeanValidation": false,
-    "useGzipFeature": false,
+    "useBeanValidation": true,
+    "performBeanValidation": true,
+    "useGzipFeature": true,
     "useRuntimeException": true
   }
+
 }
