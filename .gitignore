@@ -1,15 +1,7 @@
-*.iml
-.idea/
-target/
-*.zip
-*.exe
-.logs/
-*.xlsx
-allure-results/
-allure-report/
-.allure/
 *.class
 
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
 
 # Package Files #
 *.jar
@@ -26,4 +18,4 @@ hs_err_pid*
 **/target
 target
 .gradle
-**/build
+build
