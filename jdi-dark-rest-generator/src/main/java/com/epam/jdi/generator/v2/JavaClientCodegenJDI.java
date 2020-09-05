@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.epam.jdi.generator.v2.JavaCodegenConstantsJDI.*;
-import static io.swagger.codegen.v3.CodegenConstants.IS_ENUM_EXT_NAME;
+import static io.swagger.codegen.v3.CodegenConstants.*;
 import static io.swagger.codegen.v3.generators.handlebars.ExtensionHelper.getBooleanValue;
 import static io.swagger.codegen.v3.generators.java.JavaClientCodegen.USE_RUNTIME_EXCEPTION;
 
@@ -41,15 +42,14 @@ public JavaClientCodegenJDI() {
     super();
     
     artifactId = "jdi-java-client";
-    apiPackage = "com.epam.jdi.client.api";
-    modelPackage = "com.epam.jdi.client.model";
+    groupId = "com.epam.jdi.client";
     
-    setJava8Mode(true);
-    setHideGenerationTimestamp(true);
-    setDateLibrary(getDefaultDateLibrary());
-    setTemplateDir(getDefaultTemplateDir());
-    setOutputDir(getDefaultOutputFolder());
-    setTemplateEngine(getDefaultTemplateEngine());
+    java8Mode = true;
+    
+    dateLibrary = getDefaultDateLibrary();
+    outputFolder = getDefaultOutputFolder();
+    templateDir = getDefaultTemplateDir();
+    templateEngine = getDefaultTemplateEngine();
     
     cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
     cliOptions.add(CliOption.newBoolean(PERFORM_BEANVALIDATION, "Perform BeanValidation"));
@@ -89,6 +89,11 @@ public String getHelp() {
 
 @Override
 public void processOpts() {
+    //first set packages, than call super method, as it will add default values to additional properties
+    setInvokerPackageFallingToDefault();
+    setApiPackageFallingToDefault();
+    setModelPackageFallingToDefault();
+    
     super.processOpts();
     
     if (additionalProperties.containsKey(USE_BEANVALIDATION)) {
@@ -136,16 +141,10 @@ public void processOpts() {
     
     setTemplateEngineFallingToDefault();
     
-    setOutputFolderFallingToDefault();
-    
-    setInvokerPackageFallingToDefault();
-    setApiPackageFallingToDefault();
-    setModelPackageFallingToDefault();
+    //    setOutputFolderFallingToDefault();
     
     final String invokerFolder = (sourceFolder + File.separator + invokerPackage).replace(".", File.separator);
     final String authFolder = (sourceFolder + File.separator + invokerPackage + ".auth").replace(".", File.separator);
-    //    final String apiFolder =
-    //        (sourceFolder + File.separator + apiPackage).replace(".", File.separator);
     
     modelDocTemplateFiles.remove("model_doc.mustache");
     apiDocTemplateFiles.remove("api_doc.mustache");
@@ -200,37 +199,73 @@ public void processOpts() {
     }
 }
 
-private void setModelPackageFallingToDefault() {
-    final Object o = additionalProperties.get(JavaCodegenConstantsJDI.MODEL_PACKAGE);
-    String value = (o == null) ? getInvokerPackage() + ".model" : o.toString();
-    this.setModelPackage(sanitizePackageName(value));
+protected void setModelPackageFallingToDefault() {
+    final Object o = additionalProperties.get(MODEL_PACKAGE);
+    String value;
+    if (o != null) {
+        value = sanitizePackageName(o.toString());
+    }
+    else {
+        
+        final String invokerPackage = getInvokerPackage();
+        if (StringUtils.isNotBlank(invokerPackage)) {
+            value = invokerPackage + ".model";
+        }
+        else {
+            value = getDefaultInvokerPackage() + ".model";
+            writePropertyBackWithValue(INVOKER_PACKAGE, getDefaultInvokerPackage());
+        }
+    }
+    this.setApiPackage(sanitizePackageName(value));
     writePropertyBackWithValue(MODEL_PACKAGE, value);
-    log.info(String.format("%s set to %s", JavaCodegenConstantsJDI.MODEL_PACKAGE, value));
+    log.info(String.format("%s set to %s", MODEL_PACKAGE, value));
 }
 
-private void setApiPackageFallingToDefault() {
-    final Object o = additionalProperties.get(JavaCodegenConstantsJDI.API_PACKAGE);
-    String value = (o == null) ? getInvokerPackage() + ".api" : o.toString();
+protected void setApiPackageFallingToDefault() {
+    final Object o = additionalProperties.get(API_PACKAGE);
+    String value;
+    if (o != null) {
+        value = sanitizePackageName(o.toString());
+    }
+    else {
+        
+        final String invokerPackage = getInvokerPackage();
+        if (StringUtils.isNotBlank(invokerPackage)) {
+            value = invokerPackage + ".api";
+        }
+        else {
+            value = getDefaultInvokerPackage() + ".api";
+            writePropertyBackWithValue(INVOKER_PACKAGE, getDefaultInvokerPackage());
+        }
+    }
     this.setApiPackage(sanitizePackageName(value));
     writePropertyBackWithValue(API_PACKAGE, value);
-    log.info(String.format("%s set to %s", JavaCodegenConstantsJDI.API_PACKAGE, value));
+    log.info(String.format("%s set to %s", API_PACKAGE, value));
 }
 
-private void setInvokerPackageFallingToDefault() {
-    final Object o = additionalProperties.get(JavaCodegenConstantsJDI.INVOKER_PACKAGE);
+protected void setInvokerPackageFallingToDefault() {
+    final Object o = additionalProperties.get(CodegenConstants.INVOKER_PACKAGE);
     String value = (o == null) ? getDefaultInvokerPackage() : o.toString();
     this.setInvokerPackage(sanitizePackageNameWithDefault(value, getDefaultInvokerPackage()));
     writePropertyBackWithValue(INVOKER_PACKAGE, value);
-    log.info(String.format("%s set to %s", JavaCodegenConstantsJDI.INVOKER_PACKAGE, value));
+    log.info(String.format("%s set to %s", CodegenConstants.INVOKER_PACKAGE, value));
 }
 
-private void setOutputFolderFallingToDefault() {
-    final Object o = additionalProperties.get(JavaCodegenConstantsJDI.OUTPUT_FOLDER);
-    String value = (o == null) ? getDefaultOutputFolder() : o.toString();
-    this.setOutputDir(value);
-    writePropertyBackWithValue(OUTPUT_FOLDER, value);
-    log.error(String.format("%s set to %s", JavaCodegenConstantsJDI.OUTPUT_FOLDER, value));
-}
+//private void setOutputFolderFallingToDefault() {
+//    final Object o = additionalProperties.get(JavaCodegenConstantsJDI.OUTPUT_FOLDER);
+////    String value;
+////    if(o!=null){
+////        value = o.toString();
+////        this.setOutputDir(value);
+////        writePropertyBackWithValue(OUTPUT_FOLDER, value);
+////    }else{
+////        if(outputFolder.isBlank()){
+////    }
+//    String value = (o == null) ? getDefaultOutputFolder() : o.toString();
+//    this.setOutputDir(value);
+//    writePropertyBackWithValue(OUTPUT_FOLDER, value);
+//    log.error(String.format("%s set to %s", JavaCodegenConstantsJDI.OUTPUT_FOLDER, value));
+//}
 
 private void addDateLibraryImportsAndProperties() {
     additionalProperties.remove("threetenbp");
@@ -288,7 +323,7 @@ protected void setTemplateEngineFallingToDefault() {
         templateEngineName = CodegenConstants.MUSTACHE_TEMPLATE_ENGINE;
     }
     writePropertyBackWithValue(CodegenConstants.TEMPLATE_ENGINE, templateEngineName);
-    log.info(String.format("%s set to %s", JavaCodegenConstantsJDI.TEMPLATE_ENGINE, templateEngineName));
+    log.info(String.format("%s set to %s", CodegenConstants.TEMPLATE_ENGINE, templateEngineName));
 }
 
 protected void setDateLibraryFallingToDefault() {

@@ -3,7 +3,7 @@ package com.epam.jdi.generator.v2;
 import io.swagger.codegen.v3.CodegenConstants;
 
 /** Created by oksana_cherniavskaia on 01.09.2020. */
-public class JavaCodegenConstantsJDI extends CodegenConstants {
+public class JavaCodegenConstantsJDI  {
 
   public static final String SERIALIZATION_LIBRARY = "serializationLibrary";
   public static final String SERIALIZATION_LIBRARY_DESC =

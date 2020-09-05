@@ -50,7 +50,7 @@ public String getDefaultOutputFolder() {
 
 @Override
 public String getDefaultInvokerPackage() {
-    return "io.swagger";
+    return "com.epam.jdi.client";
 }
 
 @Override
