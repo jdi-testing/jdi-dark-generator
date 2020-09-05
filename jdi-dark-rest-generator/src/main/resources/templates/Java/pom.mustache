@@ -20,53 +20,50 @@
 	</developers>
 
 	<properties>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<allure.testng>2.7.0</allure.testng>
 		<allure.maven>2.10.0</allure.maven>
 		<aspectj.version>1.9.5</aspectj.version>
-		<testng.version>7.0.0</testng.version>
+		<testng.version>7.3.0</testng.version>
 		<lombok.version>1.18.12</lombok.version>
 		<lombok.maven>1.18.12.0</lombok.maven>
 		<dark.version>1.1.7</dark.version>
 		<suiteXML.file>general.xml</suiteXML.file>
-
 		<swagger.v3.annotations.version>2.1.4</swagger.v3.annotations.version>
 		<rest.assured.version>4.3.0</rest.assured.version>
 		<gson.version>2.8.6</gson.version>
 		<gson.fire.version>1.8.4</gson.fire.version>
 		{{#joda}}
-			<jodatime.version>2.10.5</jodatime.version>
+		<jodatime.version>2.10.5</jodatime.version>
 		{{/joda}}
 		{{#threetenbp}}
-			<threetenbp.version>1.4.3</threetenbp.version>
+		<threetenbp.version>1.4.3</threetenbp.version>
 		{{/threetenbp}}
 		{{#jackson}}
-			<jackson.version>2.10.3</jackson.version>
-			<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
-			{{#threetenbp}}
-				<jackson.threetenbp.version>2.10.0</jackson.threetenbp.version>
-			{{/threetenbp}}
+		<jackson.version>2.10.3</jackson.version>
+		<jackson.databind.nullable.version>0.2.1</jackson.databind.nullable.version>
+		{{#threetenbp}}
+		<jackson.threetenbp.version>2.10.0</jackson.threetenbp.version>
+		{{/threetenbp}}
 		{{/jackson}}
 		<javax.annotation.version>1.3.2</javax.annotation.version>
 		<junit.version>4.13</junit.version>
-
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		{{#useOas2}}
-			<swagger-annotations-version>1.5.15</swagger-annotations-version>
+		<swagger-annotations-version>1.5.15</swagger-annotations-version>
 		{{/useOas2}}
 		{{^useOas2}}
-			<swagger-annotations-version>2.1.4</swagger-annotations-version>
+		<swagger-annotations-version>2.1.4</swagger-annotations-version>
 		{{/useOas2}}
-
 		<commons_io_version>2.5</commons_io_version>
 		<commons_lang3_version>3.6</commons_lang3_version>
+
 	</properties>
 
 	{{#jackson}}
 		<dependencyManagement>
 			<dependencies>
-
 				<dependency>
 					<groupId>com.fasterxml.jackson</groupId>
 					<artifactId>jackson-bom</artifactId>
@@ -85,25 +82,20 @@
 			<version>${dark.version}</version>
 		</dependency>
 		{{#useOas2}}
-			<dependency>
-				<groupId>io.swagger</groupId>
-				<artifactId>swagger-annotations</artifactId>
-				<version>${swagger-annotations-version}</version>
-			</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger-annotations-version}</version>
+		</dependency>
 		{{/useOas2}}
 		{{^useOas2}}
-			<dependency>
-				<groupId>io.swagger.core.v3</groupId>
-				<artifactId>swagger-annotations</artifactId>
-				<version>${swagger-annotations-version}</version>
-			</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger-annotations-version}</version>
+		</dependency>
 		{{/useOas2}}
 
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>${testng.version}</version>
-		</dependency>
 		<!--Allure config in parent-->
 		<dependency>
 			<groupId>io.qameta.allure</groupId>
@@ -123,17 +115,7 @@
 			<version>1.18.12</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>io.swagger.codegen.v3</groupId>-->
-		<!--			<artifactId>swagger-codegen</artifactId>-->
-		<!--			<version>${swagger.codegen.v3.version}</version>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>io.swagger.core.v3</groupId>-->
-		<!--			<artifactId>swagger-annotations</artifactId>-->
-		<!--			<version>${swagger.codegen.v3.annotations.version}</version>-->
-		<!--		</dependency>-->
-		<!-- @Nullable annotation -->
+
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
@@ -158,95 +140,103 @@
 			</dependency>
 		{{/gson}}
 		{{#joda}}
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${jodatime.version}</version>
-			</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${jodatime.version}</version>
+		</dependency>
 		{{/joda}}
 		{{#threetenbp}}
-			<dependency>
-				<groupId>org.threeten</groupId>
-				<artifactId>threetenbp</artifactId>
-				<version>${threetenbp.version}</version>
-			</dependency>
+		<dependency>
+			<groupId>org.threeten</groupId>
+			<artifactId>threetenbp</artifactId>
+			<version>${threetenbp.version}</version>
+		</dependency>
 		{{/threetenbp}}
 		{{#gson}}
-			<dependency>
-				<groupId>io.gsonfire</groupId>
-				<artifactId>gson-fire</artifactId>
-				<version>${gson.fire.version}</version>
-			</dependency>
+		<dependency>
+			<groupId>io.gsonfire</groupId>
+			<artifactId>gson-fire</artifactId>
+			<version>${gson.fire.version}</version>
+		</dependency>
 		{{/gson}}
 		{{#jackson}}
 			<!-- JSON processing: jackson -->
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>${jackson.version}</version>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
 
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
 
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 
-			{{#withXml}}
-				<dependency>
-					<groupId>com.fasterxml.jackson.dataformat</groupId>
-					<artifactId>jackson-dataformat-xml</artifactId>
-				</dependency>
-			{{/withXml}}
-			{{#joda}}
-				<dependency>
-					<groupId>com.fasterxml.jackson.datatype</groupId>
-					<artifactId>jackson-datatype-joda</artifactId>
-				</dependency>
-			{{/joda}}
-			{{#java8}}
-				<dependency>
-					<groupId>com.fasterxml.jackson.datatype</groupId>
-					<artifactId>jackson-datatype-jsr310</artifactId>
-				</dependency>
-			{{/java8}}
-			{{#threetenbp}}
-				<dependency>
-					<groupId>com.github.joschi.jackson</groupId>
-					<artifactId>jackson-datatype-threetenbp</artifactId>
-					<version>${jackson-threetenbp.version}</version>
-				</dependency>
-			{{/threetenbp}}
+		{{#withXml}}
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+		{{/withXml}}
+		{{#joda}}
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+		</dependency>
+		{{/joda}}
+		{{#java8}}
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		{{/java8}}
+		{{#threetenbp}}
+		<dependency>
+			<groupId>com.github.joschi.jackson</groupId>
+			<artifactId>jackson-datatype-threetenbp</artifactId>
+			<version>${jackson-threetenbp.version}</version>
+		</dependency>
+		{{/threetenbp}}
 		{{/jackson}}
 
 		{{#useBeanValidation}}
 			<!-- Bean Validation API support -->
-			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
-				<version>2.0.1.Final</version>
-				<scope>provided</scope>
-			</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
 		{{/useBeanValidation}}
 		{{#performBeanValidation}}
-			<!-- Bean Validation Impl. used to perform BeanValidation -->
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-validator</artifactId>
-				<version>6.0.19.Final</version>
-			</dependency>
+		<!-- Bean Validation Impl. used to perform BeanValidation -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.19.Final</version>
+		</dependency>
 		{{/performBeanValidation}}
+	<!-- test dependencies -->
+
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testng.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
