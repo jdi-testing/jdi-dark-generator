@@ -251,22 +251,6 @@ protected void setInvokerPackageFallingToDefault() {
     log.info(String.format("%s set to %s", CodegenConstants.INVOKER_PACKAGE, value));
 }
 
-//private void setOutputFolderFallingToDefault() {
-//    final Object o = additionalProperties.get(JavaCodegenConstantsJDI.OUTPUT_FOLDER);
-////    String value;
-////    if(o!=null){
-////        value = o.toString();
-////        this.setOutputDir(value);
-////        writePropertyBackWithValue(OUTPUT_FOLDER, value);
-////    }else{
-////        if(outputFolder.isBlank()){
-////    }
-//    String value = (o == null) ? getDefaultOutputFolder() : o.toString();
-//    this.setOutputDir(value);
-//    writePropertyBackWithValue(OUTPUT_FOLDER, value);
-//    log.error(String.format("%s set to %s", JavaCodegenConstantsJDI.OUTPUT_FOLDER, value));
-//}
-
 private void addDateLibraryImportsAndProperties() {
     additionalProperties.remove("threetenbp");
     additionalProperties.remove("joda");
