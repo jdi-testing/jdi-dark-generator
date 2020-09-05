@@ -56,7 +56,13 @@ options.addBooleanOption('Xdoclint:none', true)
 }
 
 ext {
-swagger_annotations_version = "1.5.17"
+{{#useOas2}}
+	swagger_annotations_version = "1.5.15"
+{{/useOas2}}
+{{^useOas2}}
+	swagger_annotations_version = "2.1.4"
+{{/useOas2}}
+swagger_v3_annotations_version = "2.1.4"
 jackson_version = "{{^threetenbp}}2.10.1{{/threetenbp}}{{#threetenbp}}2.6.4{{/threetenbp}}"
 jersey_version = "1.19.4"
 jodatime_version = "2.9.9"
@@ -66,6 +72,8 @@ slf4j_version = '1.7.28'
 logback_version = '1.2.3'
 allure_version = '2.13.1'
 dark_version = "1.1.7"
+gson_version = "2.8.6"
+gson_fire_version = "1.8.4"
 }
 
 
@@ -101,15 +109,31 @@ systemProperty "file.encoding", "UTF-8"
 }
 
 dependencies {
-implementation "io.swagger:swagger-annotations:$swagger_annotations_version"
+{{#useOas2}}
+	compile "io.swagger:swagger-annotations:$swagger_annotations_version"
+{{/useOas2}}
+{{^useOas2}}
+	compile "io.swagger.core.v3:swagger-annotations:$swagger_annotations_version"
+{{/useOas2}}
+implementation "io.swagger.core.v3:swagger-annotations:${swagger_v3_annotations_version}"
 
-implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
-implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
-implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
-implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jackson_version"
 implementation "org.apache.commons:commons-lang3:${apache_lang_version}"
 implementation "org.slf4j:slf4j-api:${slf4j_version}"
 implementation "ch.qos.logback:logback-classic:${logback_version}"
+
+{{#jackson}}
+	implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+	implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
+	implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+	implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jackson_version"
+{{/jackson}}
+
+{{#gson}}
+	implementation "com.google.code.gson:gson:${gson_version}"
+	implementation "io.gsonfire:gson-fire:${gson_fire_version}"
+
+
+{{/gson}}
 
 implementation 'io.rest-assured:rest-assured'
 implementation 'io.rest-assured:json-path'
