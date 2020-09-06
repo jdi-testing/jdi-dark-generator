@@ -1,7 +1,7 @@
 {
 
 
-  "inputSpecURL": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml",
+  "inputSpecURL": "jdi-dark-rest-generator/src/main/resources/petstore.json",
   "outputDir": "out222",
 
   "invokerPackage": "aa",
@@ -21,7 +21,7 @@
 
 
 
-  "useOas2": false,
+  "useOas2": true,
 
 
   "groupId": "io.swagger.jdi",
@@ -43,7 +43,7 @@
 
     "hideGenerationTimestamp": false,
     "withXml": true,
-    "useOas2": false,
+    "useOas2": true,
     "dateLibrary": "joda",
     "java8": true,
     "useBeanValidation": true,
