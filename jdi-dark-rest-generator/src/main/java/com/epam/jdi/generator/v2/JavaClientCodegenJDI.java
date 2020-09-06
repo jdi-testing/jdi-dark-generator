@@ -5,8 +5,6 @@ import io.swagger.codegen.v3.generators.features.BeanValidationFeatures;
 import io.swagger.codegen.v3.generators.features.GzipFeatures;
 import io.swagger.codegen.v3.generators.features.NotNullAnnotationFeatures;
 import io.swagger.codegen.v3.generators.features.PerformBeanValidationFeatures;
-import io.swagger.codegen.v3.templates.HandlebarTemplateEngine;
-import io.swagger.codegen.v3.templates.MustacheTemplateEngine;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -43,12 +41,13 @@ public JavaClientCodegenJDI() {
     
     artifactId = "jdi-java-client";
     groupId = "com.epam.jdi.client";
-    
     java8Mode = true;
     
     dateLibrary = getDefaultDateLibrary();
     outputFolder = getDefaultOutputFolder();
     templateDir = getDefaultTemplateDir();
+    customTemplateDir = "";
+    
     templateEngine = getDefaultTemplateEngine();
     
     cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
@@ -89,7 +88,8 @@ public String getHelp() {
 
 @Override
 public void processOpts() {
-    //first set packages, than call super method, as it will add default values to additional properties
+    //first set packages, than call super method, as it will add default values to additional properties which we do not need
+    
     setInvokerPackageFallingToDefault();
     setApiPackageFallingToDefault();
     setModelPackageFallingToDefault();
@@ -127,19 +127,16 @@ public void processOpts() {
     if (additionalProperties.containsKey(USE_RUNTIME_EXCEPTION)) {
         this.setUseRuntimeException(convertPropertyToBooleanAndWriteBack(USE_RUNTIME_EXCEPTION));
     }
-    if (additionalProperties.containsKey(USE_OAS2)) {
-        this.setUseRuntimeException(convertPropertyToBooleanAndWriteBack(USE_OAS2));
-    }
+    
+    setTemplateEngineFallingToDefault();
+    setTemplateDirFallingToDefault();
     
     setDateLibraryFallingToDefault();
     
     addDateLibraryImportsAndProperties();
     
     setSerializationLibraryFallingToDefault();
-    setCustomTemplateDirFallingToDefault();
-    setTemplateDirFallingToDefault();
-    
-    setTemplateEngineFallingToDefault();
+    //    setCustomTemplateDirFallingToDefault();
     
     //    setOutputFolderFallingToDefault();
     
@@ -290,26 +287,6 @@ private void addDateLibraryImportsAndProperties() {
     }
 }
 
-@Override
-protected void setTemplateEngine() {
-    setTemplateEngineFallingToDefault();
-}
-
-protected void setTemplateEngineFallingToDefault() {
-    String templateEngineName = additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE) != null ? additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE).toString() : null;
-    if (CodegenConstants.HANDLEBARS_TEMPLATE_ENGINE.equalsIgnoreCase(templateEngineName)) {
-        templateEngine = new HandlebarTemplateEngine(this);
-        templateEngineName = CodegenConstants.HANDLEBARS_TEMPLATE_ENGINE;
-    }
-    else {
-        templateEngine = new MustacheTemplateEngine(this);
-        // templateEngine = new MustacheTemplateEngine(this);
-        templateEngineName = CodegenConstants.MUSTACHE_TEMPLATE_ENGINE;
-    }
-    writePropertyBackWithValue(CodegenConstants.TEMPLATE_ENGINE, templateEngineName);
-    log.info(String.format("%s set to %s", CodegenConstants.TEMPLATE_ENGINE, templateEngineName));
-}
-
 protected void setDateLibraryFallingToDefault() {
     final Object o = additionalProperties.get(JavaCodegenConstantsJDI.DATE_LIBRARY);
     String dateLibrary = (o == null) ? getDefaultDateLibrary() : o.toString();
@@ -320,25 +297,18 @@ protected void setDateLibraryFallingToDefault() {
 protected void setTemplateDirFallingToDefault() {
     final Object o = additionalProperties.get(CodegenConstants.TEMPLATE_DIR);
     String value = (o == null) ? null : o.toString();
-    String dir = (value == null) ? getDefaultTemplateDir() : value;
+    String dir = (value == null) ? getTemplateDir() : value;
     setTemplateDir(dir);
-    writePropertyBackWithValue(TEMPLATE_DIR, dir);
+    
+    writePropertyBackWithValue(TEMPLATE_DIR, (dir));
 }
 
 protected void setCustomTemplateDirFallingToDefault() {
     final Object o = additionalProperties.get(CodegenConstants.TEMPLATE_DIR);
     String value = (o == null) ? null : o.toString();
-    String dir = (value == null) ? getDefaultTemplateDir() : value;
+    String dir = (value == null) ? getTemplateDir() : value;
     setCustomTemplateDir(dir);
-    writePropertyBackWithValue(TEMPLATE_DIR, dir);
 }
-//  @SuppressWarnings("unchecked")
-//  @Override
-//  public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
-//    super.postProcessOperations(objs);
-//
-//    return objs;
-//  }
 
 @Override
 public String apiFilename(String templateName, String tag) {
@@ -425,11 +395,6 @@ public void setSerializationLibraryFallingToDefault() {
     setSerializationLibraryFallingToDefault(value);
 }
 
-@Override
-public String getTemplateDir() {
-    return getDefaultTemplateDir();
-}
-
 public void setSerializationLibraryFallingToDefault(String serializationLibrary) {
     String library;
     if (JavaCodegenConstantsJDI.SERIALIZATION_LIBRARY_JACKSON.equalsIgnoreCase(serializationLibrary)) {
@@ -454,131 +419,5 @@ public void setSerializationLibraryFallingToDefault(String serializationLibrary)
 public String toEndpointVarName(String name) {
     return super.toEndpointVarName(name);
 }
-
-//  public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
-//    super.postProcessModelProperty(model, property);
-//    boolean isEnum = ExtensionHelper.getBooleanValue(model, "x-is-enum");
-//    if (!BooleanUtils.toBoolean(isEnum)) {
-//      if (this.additionalProperties.containsKey("jackson")) {
-//        model.imports.add("JsonProperty");
-//        model.imports.add("JsonValue");
-//      }
-//
-//      if (this.additionalProperties.containsKey("gson")) {
-//        model.imports.add("SerializedName");
-//        model.imports.add("TypeAdapter");
-//        model.imports.add("JsonAdapter");
-//        model.imports.add("JsonReader");
-//        model.imports.add("JsonWriter");
-//        model.imports.add("IOException");
-//      }
-//    } else if (this.additionalProperties.containsKey("jackson")) {
-//      model.imports.add("JsonValue");
-//      model.imports.add("JsonCreator");
-//    }
-//
-//  }
-// @Override
-//  public Map<String, Object> postProcessAllModels(Map<String, Object> objs) {
-//    Map<String, Object> allProcessedModels = super.postProcessAllModels(objs);
-//    if (!this.additionalProperties.containsKey("gsonFactoryMethod")) {
-//      List<Object> allModels = new ArrayList();
-//      Iterator var4 = allProcessedModels.keySet().iterator();
-//
-//      while(var4.hasNext()) {
-//        String name = (String)var4.next();
-//        Map models = (Map)allProcessedModels.get(name);
-//
-//        try {
-//          allModels.add(((List)models.get("models")).get(0));
-//        } catch (Exception var8) {
-//          var8.printStackTrace();
-//        }
-//      }
-//
-//      this.additionalProperties.put("parent", this.modelInheritanceSupportInGson(allModels));
-//    }
-//
-//    return allProcessedModels;
-//  }
-
-//  public Map<String, Object> postProcessModelsEnum(Map<String, Object> objs) {
-//    objs = super.postProcessModelsEnum(objs);
-//    if (this.additionalProperties.containsKey("gson")) {
-//      List<Map<String, String>> imports = (List)objs.get("imports");
-//      List<Object> models = (List)objs.get("models");
-//      Iterator var4 = models.iterator();
-//
-//      while(var4.hasNext()) {
-//        Object _mo = var4.next();
-//        Map<String, Object> mo = (Map)_mo;
-//        CodegenModel cm = (CodegenModel)mo.get("model");
-//        boolean isEnum = ExtensionHelper.getBooleanValue(cm, "x-is-enum");
-//        if (Boolean.TRUE.equals(isEnum) && cm.allowableValues != null) {
-//          cm.imports.add(this.importMapping.get("SerializedName"));
-//          Map<String, String> item = new HashMap();
-//          item.put("import", this.importMapping.get("SerializedName"));
-//          imports.add(item);
-//        }
-//      }
-//    }
-//
-//    return objs;
-//  }
-
-public String getArgumentsLocation() {
-    return "/arguments/java.yaml";
-}
-
-//  protected List<Map<String, Object>> modelInheritanceSupportInGson(List<?> allModels) {
-//    Map<CodegenModel, List<CodegenModel>> byParent = new LinkedHashMap();
-//    Iterator var3 = allModels.iterator();
-//
-//    CodegenModel parentModel;
-//    while(var3.hasNext()) {
-//      Object model = var3.next();
-//      Map entry = (Map)model;
-//      parentModel = ((CodegenModel)entry.get("model")).parentModel;
-//      if (null != parentModel) {
-//        ((List)byParent.computeIfAbsent(parentModel, (k) -> {
-//          return new LinkedList();
-//        })).add((CodegenModel)entry.get("model"));
-//      }
-//    }
-//
-//    List<Map<String, Object>> parentsList = new ArrayList();
-//
-//    HashMap parent;
-//    for(Iterator var14 = byParent.entrySet().iterator(); var14.hasNext();
-// parentsList.add(parent)) {
-//      Map.Entry<CodegenModel, List<CodegenModel>> parentModelEntry = (Map.Entry)var14.next();
-//      parentModel = (CodegenModel)parentModelEntry.getKey();
-//      List<Map<String, Object>> childrenList = new ArrayList();
-//      parent = new HashMap();
-//      parent.put("classname", parentModel.classname);
-//      List<CodegenModel> childrenModels = (List)byParent.get(parentModel);
-//      Iterator var10 = childrenModels.iterator();
-//
-//      while(var10.hasNext()) {
-//        CodegenModel model = (CodegenModel)var10.next();
-//        Map<String, Object> child = new HashMap();
-//        child.put("name", model.name);
-//        child.put("classname", model.classname);
-//        childrenList.add(child);
-//      }
-//
-//      parent.put("children", childrenList);
-//      parent.put("discriminator", parentModel.discriminator);
-//      if (parentModel.discriminator != null && parentModel.discriminator.getMapping() != null)
-// {
-//        parentModel.discriminator.getMapping().replaceAll((key, value) -> {
-//          return OpenAPIUtil.getSimpleRef(value);
-//        });
-//      }
-//    }
-//
-//    return parentsList;
-//  }
-//
 
 }

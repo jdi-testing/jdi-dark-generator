@@ -6,6 +6,7 @@ import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.generators.handlebars.ExtensionHelper;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.codegen.v3.generators.util.OpenAPIUtil;
+import io.swagger.codegen.v3.templates.HandlebarTemplateEngine;
 import io.swagger.codegen.v3.templates.MustacheTemplateEngine;
 import io.swagger.codegen.v3.templates.TemplateEngine;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -13,9 +14,11 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.util.*;
 
 import static com.epam.jdi.generator.v2.JavaCodegenConstantsJDI.JAVA_8_DATE_LIBRARY;
@@ -23,6 +26,7 @@ import static com.epam.jdi.generator.v2.JavaCodegenConstantsJDI.JAVA_8_DATE_LIBR
 /**
  * Created by oksana_cherniavskaia on 31.08.2020.
  */
+@Slf4j
 @Getter
 public abstract class AbstractJavaCodegenJDI extends AbstractJavaCodegen implements CodegenConfigJDI {
 
@@ -39,8 +43,8 @@ protected void setTemplateEngine(TemplateEngine templateEngine) {
 }
 
 @Override
-public String getTemplateDir() {
-    return getDefaultTemplateDir();
+protected String getTemplateDir() {
+    return new StringBuilder().append(getDefaultTemplateDir()).append(File.separatorChar).append(templateEngine.getName()).toString();
 }
 
 @Override
@@ -237,9 +241,34 @@ private void decideMediaType(String key, Map<String, String> mediaType) {
 }
 
 @Override
+protected void setTemplateEngine() {
+    setTemplateEngineFallingToDefault();
+}
+
+protected void setTemplateEngineFallingToDefault() {
+    String templateEngineName = additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE) != null ? additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE).toString() : null;
+    if (CodegenConstants.HANDLEBARS_TEMPLATE_ENGINE.equalsIgnoreCase(templateEngineName)) {
+        templateEngine = new HandlebarTemplateEngine(this);
+        templateEngineName = CodegenConstants.HANDLEBARS_TEMPLATE_ENGINE;
+    }
+    else {
+        templateEngine = new MustacheTemplateEngine(this);
+        // templateEngine = new MustacheTemplateEngine(this);
+        templateEngineName = CodegenConstants.MUSTACHE_TEMPLATE_ENGINE;
+    }
+    writePropertyBackWithValue(CodegenConstants.TEMPLATE_ENGINE, templateEngineName);
+    log.info(String.format("%s set to %s", CodegenConstants.TEMPLATE_ENGINE, templateEngineName));
+}
+
+@Override
 public void processOpts() {
     
     super.processOpts();
+    setTemplateEngine();
+    
+    //    this.embeddedTemplateDir = getDefaultTemplateDir();
+    this.embeddedTemplateDir = this.templateDir = getTemplateDir(); //reassign directories after template engine properly set
+    
     importMapping.put("Map", "java.util.Map");
     
     importMapping.put("JsonTypeName", "com.fasterxml.jackson.annotation.JsonTypeName");
