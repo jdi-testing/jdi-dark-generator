@@ -128,7 +128,6 @@ public void processOpts() {
         this.setUseRuntimeException(convertPropertyToBooleanAndWriteBack(USE_RUNTIME_EXCEPTION));
     }
     
-    setTemplateEngineFallingToDefault();
     setTemplateDirFallingToDefault();
     
     setDateLibraryFallingToDefault();
@@ -136,9 +135,6 @@ public void processOpts() {
     addDateLibraryImportsAndProperties();
     
     setSerializationLibraryFallingToDefault();
-    //    setCustomTemplateDirFallingToDefault();
-    
-    //    setOutputFolderFallingToDefault();
     
     final String invokerFolder = (sourceFolder + File.separator + invokerPackage).replace(".", File.separator);
     final String authFolder = (sourceFolder + File.separator + invokerPackage + ".auth").replace(".", File.separator);

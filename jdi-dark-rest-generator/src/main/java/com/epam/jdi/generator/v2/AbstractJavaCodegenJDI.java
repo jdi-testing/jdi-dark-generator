@@ -264,7 +264,7 @@ protected void setTemplateEngineFallingToDefault() {
 public void processOpts() {
     
     super.processOpts();
-    setTemplateEngine();
+    setTemplateEngineFallingToDefault();
     
     //    this.embeddedTemplateDir = getDefaultTemplateDir();
     this.embeddedTemplateDir = this.templateDir = getTemplateDir(); //reassign directories after template engine properly set
