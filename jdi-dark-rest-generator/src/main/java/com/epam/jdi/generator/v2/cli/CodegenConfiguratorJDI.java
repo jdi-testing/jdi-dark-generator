@@ -88,7 +88,7 @@ private Boolean useOas2;
 public CodegenConfiguratorJDI() {
 }
 
-private static String toAbsolutePathStr(String path) {
+public static String toAbsolutePathStr(String path) {
     if (isNotEmpty(path)) {
         return Paths.get(path).toAbsolutePath().toString();
     }
@@ -256,11 +256,11 @@ public ClientOptInput toClientOptInput() {
     cnfg.reservedWordsMappings().putAll(reservedWordMappings);
     cnfg.setLanguageArguments(codegenArguments);
     
+    
+    handleUseOas2Option(cnfg);
+    
     checkAndSetAdditionalProperty(serializationLibrary, JavaCodegenConstantsJDI.SERIALIZATION_LIBRARY);
-    
     checkAndSetBooleanAdditionalProperty(hideGenerationTimestamp, CodegenConstants.HIDE_GENERATION_TIMESTAMP);
-    checkAndSetBooleanAdditionalProperty(useOas2, CodegenConstants.USE_OAS2);
-    
     checkAndSetAdditionalProperty(apiPackage, CodegenConstants.API_PACKAGE);
     checkAndSetAdditionalProperty(modelPackage, CodegenConstants.MODEL_PACKAGE);
     checkAndSetAdditionalProperty(invokerPackage, CodegenConstants.INVOKER_PACKAGE);
@@ -286,6 +286,27 @@ public ClientOptInput toClientOptInput() {
     
     input.config(cnfg);
     return input;
+}
+
+private void handleUseOas2Option(CodegenConfig cnfg) {
+    checkAndSetBooleanAdditionalProperty(useOas2, CodegenConstants.USE_OAS2);
+    
+    //DefaultGenerator needs this option to be in languageArguments
+    
+    if(useOas2!=null){
+        final List<CodegenArgument> languageArguments = cnfg.getLanguageArguments();
+        final Optional<CodegenArgument> first = languageArguments.stream().filter(it -> it.getOption().equals(CodegenConstants.USE_OAS2_OPTION)).findFirst();
+        if(first.isPresent()){
+            first.get().setValue(String.valueOf(useOas2));
+        }else{
+            final CodegenArgument e = new CodegenArgument();
+            e.setValue(String.valueOf(useOas2));
+            e.setOption(CodegenConstants.USE_OAS2);
+            e.setType("boolean");
+            languageArguments.add(e);
+        }
+        
+    }
 }
 
 private void setVerboseFlags() {
