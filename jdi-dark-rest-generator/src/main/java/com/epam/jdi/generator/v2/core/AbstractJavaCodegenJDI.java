@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.*;
 
-import static com.epam.jdi.generator.v2.core.JavaCodegenConstantsJDI.JAVA_8_DATE_LIBRARY;
+import static com.epam.jdi.generator.v2.core.JavaCodegenConstantsJDI.*;
 
 /**
  * Created by oksana_cherniavskaia on 31.08.2020.

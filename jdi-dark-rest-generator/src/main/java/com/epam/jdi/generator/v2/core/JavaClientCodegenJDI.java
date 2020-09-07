@@ -132,7 +132,6 @@ public void processOpts() {
     
     setDateLibraryFallingToDefault();
     
-    addDateLibraryImportsAndProperties();
     
     setSerializationLibraryFallingToDefault();
     
@@ -247,7 +246,7 @@ protected void setInvokerPackageFallingToDefault() {
 private void addDateLibraryImportsAndProperties() {
     additionalProperties.remove("threetenbp");
     additionalProperties.remove("joda");
-    additionalProperties.remove("legacyDates");
+    additionalProperties.remove("legacy");
     
     if (THREETENBP_DATE_LIBRARY.equals(dateLibrary)) {
         additionalProperties.put("threetenbp", "true");
@@ -288,6 +287,7 @@ protected void setDateLibraryFallingToDefault() {
     String dateLibrary = (o == null) ? getDefaultDateLibrary() : o.toString();
     this.setDateLibrary(dateLibrary);
     writePropertyBackWithValue(JavaCodegenConstantsJDI.DATE_LIBRARY, dateLibrary);
+    addDateLibraryImportsAndProperties();
 }
 
 protected void setTemplateDirFallingToDefault() {
@@ -297,18 +297,6 @@ protected void setTemplateDirFallingToDefault() {
     setTemplateDir(dir);
     
     writePropertyBackWithValue(TEMPLATE_DIR, (dir));
-}
-
-protected void setCustomTemplateDirFallingToDefault() {
-    final Object o = additionalProperties.get(CodegenConstants.TEMPLATE_DIR);
-    String value = (o == null) ? null : o.toString();
-    String dir = (value == null) ? getTemplateDir() : value;
-    setCustomTemplateDir(dir);
-}
-
-@Override
-public String apiFilename(String templateName, String tag) {
-    return super.apiFilename(templateName, tag);
 }
 
 @Override

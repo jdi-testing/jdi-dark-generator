@@ -67,6 +67,7 @@ private String artifactVersion;
 private String ignoreFileOverride;
 private boolean resolveFully;
 private String serializationLibrary;
+private String dateLibrary;
 
 private List<CodegenArgument> codegenArguments = new ArrayList<>();
 private Map<String, String> systemProperties = new HashMap<>();
@@ -244,7 +245,7 @@ public ClientOptInput toClientOptInput() {
     if (isNotBlank(outputDir)) {
         cnfg.setOutputDir(outputDir);
     }
-    
+
     cnfg.setSkipOverwrite(skipOverwrite);
     cnfg.setIgnoreFilePathOverride(ignoreFileOverride);
     cnfg.setRemoveOperationIdPrefix(removeOperationIdPrefix);
@@ -258,6 +259,7 @@ public ClientOptInput toClientOptInput() {
     
     
     handleUseOas2Option(cnfg);
+    checkAndSetAdditionalProperty(dateLibrary, JavaCodegenConstantsJDI.DATE_LIBRARY);
     
     checkAndSetAdditionalProperty(serializationLibrary, JavaCodegenConstantsJDI.SERIALIZATION_LIBRARY);
     checkAndSetBooleanAdditionalProperty(hideGenerationTimestamp, CodegenConstants.HIDE_GENERATION_TIMESTAMP);

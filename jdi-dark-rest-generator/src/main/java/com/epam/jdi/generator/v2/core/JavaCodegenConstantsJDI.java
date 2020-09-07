@@ -11,7 +11,9 @@ public class JavaCodegenConstantsJDI  {
   public static final String DATE_LIBRARY = "dateLibrary";
 
   public static final String DATE_LIBRARY_DESC =
-      "Option. Date library to use\n. joda - Joda (for legacy app only)\n. legacy - Legacy java.util.Date (if you really have a good reason not to use threetenbp\n. java8-localdatetime - Java 8 using LocalDateTime (for legacy app only)\n. java8 - Java 8 native JSR310 (preferred for jdk 1.8+) - note: this also sets \"java8\" to true\n. threetenbp - Backport of JSR310 (preferred for jdk < 1.8)\n";
+      "Option. Date library to use\n. joda - Joda (for legacy app only)\n. legacy - Legacy java.util.Date (if you really have a good reason not to use threetenbp\n. java8-localdatetime - Java 8 " +
+              "using LocalDateTime (for legacy app only)\n. java8 - Java 8 native JSR310 (preferred for jdk 1.8+) - note: this also sets \"java8\" to true\n. threetenbp - Backport of JSR310 " +
+              "(preferred for jdk < 1.8)\n. Default Java 8";
 
   public static final String FULL_JAVA_UTIL = "fullJavaUtil";
   public static final String FULL_JAVA_UTIL_DESC =
@@ -25,6 +27,11 @@ public class JavaCodegenConstantsJDI  {
       " Option. Use Java8 classes instead of third party equivalents\ntrue - Use Java 8 classes such as Base64\nfalse - Various third party libraries as needed";
 
   public static final String OUTPUT_FOLDER = "outputFolder";
+public static final String OUTPUT_FOLDER_DESC = "where to write the generated files. Defaults to generated-code folder";
+
+public static final String VERBOSE = "verbose";
+public static final String VERBOSE_DESC = "verbose mode";
+public static final String TEMPLATE_DIR_DESC = "folder containing the template files";
 
   public static final String JACKSON = "jackson";
   public static final String GSON = "gson";
