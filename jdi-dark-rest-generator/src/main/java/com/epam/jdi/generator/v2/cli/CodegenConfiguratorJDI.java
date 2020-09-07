@@ -1,7 +1,7 @@
 package com.epam.jdi.generator.v2.cli;
 
-import com.epam.jdi.generator.v2.JavaClientCodegenJDI;
-import com.epam.jdi.generator.v2.JavaCodegenConstantsJDI;
+import com.epam.jdi.generator.v2.core.JavaClientCodegenJDI;
+import com.epam.jdi.generator.v2.core.JavaCodegenConstantsJDI;
 import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.auth.AuthParser;
 import io.swagger.parser.OpenAPIParser;
@@ -196,7 +196,7 @@ public ClientOptInput toClientOptInput() {
     setVerboseFlags();
     setSystemProperties();
     
-    CodegenConfig cnfg = CodegenConfigLoader.forName("com.epam.jdi.generator.v2.JavaClientCodegenJDI");
+    CodegenConfig cnfg = CodegenConfigLoader.forName("com.epam.jdi.generator.v2.core.JavaClientCodegenJDI");
     
     if (!(cnfg instanceof JavaClientCodegenJDI)) {
         throw new RuntimeException("Wrong class loaded");

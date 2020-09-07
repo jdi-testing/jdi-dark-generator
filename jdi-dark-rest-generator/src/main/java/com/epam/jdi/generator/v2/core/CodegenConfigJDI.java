@@ -1,4 +1,4 @@
-package com.epam.jdi.generator.v2;
+package com.epam.jdi.generator.v2.core;
 
 import io.swagger.codegen.v3.CodegenConfig;
 import io.swagger.codegen.v3.CodegenOperation;

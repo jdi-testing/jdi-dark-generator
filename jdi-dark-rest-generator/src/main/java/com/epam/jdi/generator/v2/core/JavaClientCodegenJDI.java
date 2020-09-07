@@ -1,4 +1,4 @@
-package com.epam.jdi.generator.v2;
+package com.epam.jdi.generator.v2.core;
 
 import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.generators.features.BeanValidationFeatures;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.epam.jdi.generator.v2.JavaCodegenConstantsJDI.*;
+import static com.epam.jdi.generator.v2.core.JavaCodegenConstantsJDI.*;
 import static io.swagger.codegen.v3.CodegenConstants.*;
 import static io.swagger.codegen.v3.generators.handlebars.ExtensionHelper.getBooleanValue;
 import static io.swagger.codegen.v3.generators.java.JavaClientCodegen.USE_RUNTIME_EXCEPTION;
