@@ -110,8 +110,12 @@ systemProperty "file.encoding", "UTF-8"
 }
 
 dependencies {
+{{#use-oas2}}
 implementation "io.swagger:swagger-annotations:${swagger_v2_annotations_version}"
+{{/use-oas2}}
+{{^use-oas2}}
 implementation "io.swagger.core.v3:swagger-annotations:${swagger_v3_annotations_version}"
+{{/use-oas2}}
 
 implementation "org.apache.commons:commons-lang3:${apache_lang_version}"
 implementation "org.slf4j:slf4j-api:${slf4j_version}"
