@@ -1,17 +1,18 @@
 {
 
 
-  "inputSpecURL": "jdi-dark-rest-generator/src/main/resources/petstore.json",
-  "outputDir": "out222",
+  "inputSpecURL": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml",
+  "outputDir": "generated-code",
 
-  "invokerPackage": "aa",
+  "invokerPackage": "com.epam.jdi.client",
 
-  "modelPackage": "aa.model",
-  "apiPackage": "aa.api",
+  "modelPackage": "com.epam.jdi.client.model",
+  "apiPackage": "com.epam.jdi.client.api",
   "modelNamePrefix": "",
   "modelNameSuffix": "",
+  "templateDir": "src/main/resources/templates/Java",
 
-  "templateDir": "jdi-dark-rest-generator/src/main/resources/templates",
+  "templateEngine": "mustache",
 
   "flattenInlineSchema": true,
 
@@ -21,14 +22,14 @@
 
 
 
-  "useOas2": true,
+  "useOas2": false,
 
 
   "groupId": "io.swagger.jdi",
-  "artifactId": "swagger-java-jdi",
+  "artifactId": "swagger-java-jdi-5",
   "artifactVersion": "1.0.0",
-  "ignoreFileOverride": "jdi-dark-rest-generator/src/main/resources/.swagger-codegen-ignore",
-  "serializationLibrary": "gson",
+  "ignoreFileOverride": "src/main/resources/.swagger-codegen-ignore",
+  "serializationLibrary": "jackson",
   "resolveFully": true,
 
 
@@ -39,12 +40,9 @@
     "serializableModel": false,
     "bigDecimalAsString": true,
     "fullJavaUtil": false,
-    "serializationLibrary": "gson",
-
     "hideGenerationTimestamp": false,
-    "withXml": true,
-    "useOas2": true,
-    "dateLibrary": "joda",
+    "withXml": false,
+    "dateLibrary": "java8",
     "java8": true,
     "useBeanValidation": true,
     "performBeanValidation": true,

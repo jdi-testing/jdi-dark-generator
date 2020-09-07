@@ -170,7 +170,34 @@
                     </execution>
                 </executions>
             </plugin>
-            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+    
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.epam.jdi.generator.v2.SwaggerCodegenJDI</mainClass>
+                    <arguments>
+                        <argument>generate</argument>
+                        <argument>-c</argument>>
+                        <argument>src/main/resources/config.json</argument>>
+                    </arguments>
+                    <systemProperties>
+<!--                        <systemProperty>-->
+<!--                            <key>myproperty</key>-->
+<!--                            <value>myvalue</value>-->
+<!--                        </systemProperty>-->
+                    </systemProperties>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
