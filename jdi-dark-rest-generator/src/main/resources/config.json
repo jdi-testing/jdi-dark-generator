@@ -10,10 +10,8 @@
   "apiPackage": "com.epam.jdi.client.api",
   "modelNamePrefix": "",
   "modelNameSuffix": "",
-  "templateDir": "src/main/resources/templates/Java",
-
+  "templateDir": "src/main/resources/templates/Java/mustache",
   "templateEngine": "mustache",
-
   "flattenInlineSchema": true,
 
   "verbose": true,
@@ -31,7 +29,7 @@
   "ignoreFileOverride": "src/main/resources/.swagger-codegen-ignore",
   "serializationLibrary": "jackson",
   "resolveFully": true,
-
+  "dateLibrary": "java8",
 
   "additionalProperties": {
     "sortParamsByRequiredFlag": true,
