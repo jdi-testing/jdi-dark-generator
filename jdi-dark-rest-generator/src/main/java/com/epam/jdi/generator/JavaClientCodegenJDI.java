@@ -20,7 +20,7 @@ public class JavaClientCodegenJDI extends AbstractJavaCodegenJDI {
     public JavaClientCodegenJDI() {
         super();
         outputFolder = "generated-code" + File.separator + "java";
-        embeddedTemplateDir = templateDir = "templates/Java";
+        embeddedTemplateDir = templateDir = "templates/Java/mustache";
         invokerPackage = "io.swagger.client";
         artifactId = "swagger-java-client";
         apiPackage = invokerPackage + ".api";

@@ -49,9 +49,9 @@ public abstract class AbstractJavaCodegenJDI extends DefaultCodegenJDI implement
     public AbstractJavaCodegenJDI() {
         super();
         supportsInheritance = true;
-        modelTemplateFiles.put("templates/Java/model.mustache", ".java");
-        apiTemplateFiles.put("templates/Java/api.mustache", ".java");
-        apiTestTemplateFiles.put("templates/Java/api_test.mustache", ".java");
+        modelTemplateFiles.put("templates/Java/mustache/model.mustache", ".java");
+        apiTemplateFiles.put("templates/Java/mustache/api.mustache", ".java");
+        apiTestTemplateFiles.put("templates/Java/mustache/api_test.mustache", ".java");
 
         hideGenerationTimestamp = false;
 
