@@ -1,0 +1,48 @@
+{
+
+
+  "inputSpecURL": "specs/epam/reportportal.json",
+  "outputDir": "generated-code",
+
+  "invokerPackage": "com.epam.jdi.books.client",
+
+  "modelPackage": "com.epam.jdi.books.client.model",
+  "apiPackage": "com.epam.jdi.books.client.api",
+  "modelNamePrefix": "",
+  "modelNameSuffix": "",
+  "templateDir": "src/main/resources/templates/Java/mustache",
+  "templateEngine": "mustache",
+  "flattenInlineSchema": true,
+  "resolveFully": false,
+
+  "verbose": true,
+  "skipOverwrite": false,
+  "removeOperationIdPrefix": false,
+
+  "useOas2": false,
+
+  "groupId": "io.swagger.jdi",
+  "artifactId": "swagger-java-jdi-books",
+  "artifactVersion": "1.0.0",
+  "ignoreFileOverride": "src/main/resources/.swagger-codegen-ignore",
+  "serializationLibrary": "jackson",
+  "dateLibrary": "java8",
+
+  "additionalProperties": {
+    "sortParamsByRequiredFlag": true,
+    "ensureUniqueParams": true,
+    "sourceFolder": "src/main/java",
+    "serializableModel": false,
+    "bigDecimalAsString": true,
+    "fullJavaUtil": false,
+    "hideGenerationTimestamp": false,
+    "withXml": false,
+    "dateLibrary": "java8",
+    "java8": true,
+    "useBeanValidation": true,
+    "performBeanValidation": true,
+    "useGzipFeature": true,
+    "useRuntimeException": true
+  }
+
+}

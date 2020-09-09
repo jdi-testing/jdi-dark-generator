@@ -1,0 +1,165 @@
+import org.gradle.api.tasks.wrapper.Wrapper
+
+buildscript {
+    ext {
+        gradleLombokVersion = '3.2.0'
+    }
+}
+
+plugins {
+    
+    id 'java'
+    id 'idea'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id "io.qameta.allure" version "2.8.1"
+    id "io.franzbecker.gradle-lombok" version "${gradleLombokVersion}"
+    id 'maven-publish'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
+    
+}
+
+
+group = 'com.epam.jdi'
+version = '2.0'
+description = 'JDI Dark REST Generator'
+sourceCompatibility = '1.8'
+targetCompatibility = 1.8
+
+
+repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+}
+
+
+idea {
+    module {
+        generatedSourceDirs += file('generated-code/src/main/java')
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+/*
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = "6.6.1"
+}
+*/
+
+//New gradle 6 feature. won't work with lower gradle version
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+    failOnError = false
+    options.addBooleanOption('Xdoclint:none', true)
+}
+
+ext {
+    
+    swagger_codegen_v3_version = "3.0.21"
+    swagger_codegen_generators_version = "1.0.21"
+    swagger_v3_annotations_version="2.1.4"
+    jackson_version = "2.10.1"
+    jodatime_version = "2.9.9"
+    junit_version = "5.6.0"
+    apache_lang_version = "3.8.1"
+    logback_version = '1.2.3'
+    allure_version = '2.13.1'
+    airlift_version = "0.9"
+    slf4j_version = "1.7.30"
+}
+
+
+sourceSets {
+    main.resources.srcDir('resources') //add new folder, preserving defaults as well
+//   main.resources.srcDirs = ['src/main/resources', 'resources']  //overwrite
+//generated
+    
+    test.resources.srcDir('resources') //add new folder, preserving existing as well
+//    test.resources.srcDirs('src/test/resources')
+    main.java.srcDir "generated-code/src/main/java"
+    
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+dependencies {
+
+    implementation "io.swagger.codegen.v3:swagger-codegen:${swagger_codegen_v3_version}"
+    implementation "io.swagger.codegen.v3:swagger-codegen-generators:${swagger_codegen_generators_version}"
+    implementation 'io.rest-assured:rest-assured'
+    implementation "ch.qos.logback:logback-classic:${logback_version}"
+    implementation "org.slf4j:slf4j-api:${slf4j_version}"
+    implementation "io.airlift:airline:${airlift_version}"
+    
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+
+
+//Junit
+    testImplementation "org.junit.jupiter:junit-jupiter:${junit_version}"
+    
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_version}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junit_version}"
+    
+}
+
+dependencyManagement {
+    
+    dependencies {
+        dependencySet(group: 'io.rest-assured', version: '4.2.0') {
+            entry 'rest-assured'
+            entry 'json-path'
+            entry 'xml-path'
+        }
+        
+        dependencySet(group: 'org.junit.jupiter', version: '5.6.0') {
+            entry 'junit-jupiter-api'
+            entry 'junit-jupiter-engine'
+            entry 'junit-jupiter-params'
+            
+        }
+    }
+}
+
+jar{
+    baseName("DarkGenerator-original")
+
+}
+task customFatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.epam.jdi.generator.v2.SwaggerCodegenJDI'
+    }
+    archiveName ("DarkGenerator.jar")
+//    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+build.finalizedBy(customFatJar)
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+task copyToLib(type: Copy) {
+    into "$buildDir/libs/external"
+    from configurations.runtimeClasspath
+}
+
+build.finalizedBy(copyToLib)

@@ -1,0 +1,101 @@
+{{>licenseInfo}}
+package {{package}};
+
+import com.epam.http.annotations.ServiceDomain;
+import com.epam.http.requests.RestMethod;
+import com.epam.http.requests.RestDataMethod;
+{{#imports}}
+import {{import}};
+{{/imports}}
+{{^fullJavaUtil}}
+import java.util.*;
+{{/fullJavaUtil}}
+
+{{#operations}}
+@ServiceDomain("${domain}")
+public class {{classname}} {
+  {{#operation}}
+
+  /**
+   * {{summary}}
+   * {{notes}}
+   {{#pathParams}}
+   * @param {{paramName}} /path/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/pathParams}}
+   {{#queryParams}}
+   * @param {{paramName}} /query/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/queryParams}}
+   {{#headerParams}}
+   * @param {{paramName}} /header/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/headerParams}}
+   {{#cookieParams}}
+   * @param {{paramName}} /cookie/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/cookieParams}}
+   {{#bodyParam}}
+   * @param {{bodyParam}} /body/ {{{description}}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+   {{/bodyParam}}
+   {{#returnType}}
+   * @return {{{returnType}}}
+   {{/returnType}}
+   {{#isDeprecated}}
+   * @deprecated
+   {{/isDeprecated}}
+  */
+  {{#consumes}}
+  {{#isDeprecated}}
+  @Deprecated
+  {{/isDeprecated}}
+  @ContentType({{enumMedia}})
+  {{#queryParams.0}}
+  {{#queryParams}}
+  @QueryParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
+  {{/queryParams}}
+  {{/queryParams.0}}
+  {{#formParams.0}}
+  {{#formParams}}
+  @FormParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
+  {{/formParams}}
+  {{/formParams.0}}
+  {{#headerParams.0}}
+  {{#headerParams}}
+  @Header(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
+  {{/headerParams}}
+  {{/headerParams.0}}
+  @{{httpMethod}}("{{path}}")
+  {{#returnType}}
+  public static RestDataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
+  {{/returnType}}
+  {{^returnType}}
+  public static RestMethod {{operationId}}{{enumMedia}};
+  {{/returnType}}
+  {{/consumes}}
+  {{^hasConsumes}}
+  {{#isDeprecated}}
+  @Deprecated
+  {{/isDeprecated}}
+  {{#queryParams.0}}
+  {{#queryParams}}
+  @QueryParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
+  {{/queryParams}}
+  {{/queryParams.0}}
+  {{#formParams.0}}
+  {{#formParams}}
+  @FormParameter(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
+  {{/formParams}}
+  {{/formParams.0}}
+  {{#headerParams.0}}
+  {{#headerParams}}
+  @Header(name = "{{paramName}}", value = "{{testExample}}"){{^-last}}{{/-last}}
+  {{/headerParams}}
+  {{/headerParams.0}}
+  @{{httpMethod}}("{{path}}")
+  {{#returnType}}
+  public static RestDataMethod<{{{returnType}}}> {{operationId}}{{enumMedia}};
+  {{/returnType}}
+  {{^returnType}}
+  public static RestMethod {{operationId}}{{enumMedia}};
+  {{/returnType}}
+  {{/hasConsumes}}
+  {{/operation}}
+}
+{{/operations}}

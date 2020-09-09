@@ -1,0 +1,1118 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+	"title": "Bookstore API",
+	"version": "v1"
+  },
+  "servers": [
+	{
+	  "url": "http://localhost:8080",
+	  "description": "Generated server url"
+	}
+  ],
+  "tags": [
+	{
+	  "name": "user",
+	  "description": "Users API"
+	},
+	{
+	  "name": "role",
+	  "description": "Roles API"
+	},
+	{
+	  "name": "genre",
+	  "description": "Genres API"
+	},
+	{
+	  "name": "book",
+	  "description": "Books API"
+	}
+  ],
+  "paths": {
+	"/books": {
+	  "get": {
+		"tags": [
+		  "book"
+		],
+		"summary": "Get all existing books",
+		"operationId": "getBooks",
+		"responses": {
+		  "200": {
+			"description": "Book list",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "array",
+				  "items": {
+					"$ref": "#/components/schemas/Book"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  },
+	  "post": {
+		"tags": [
+		  "book"
+		],
+		"summary": "Add new book",
+		"operationId": "createBook",
+		"requestBody": {
+		  "description": "Book object that needs to be added to the store",
+		  "content": {
+			"application/json": {
+			  "schema": {
+				"$ref": "#/components/schemas/Book"
+			  }
+			}
+		  },
+		  "required": true
+		},
+		"responses": {
+		  "409": {
+			"description": "Book already exists",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/Book"
+				}
+			  }
+			}
+		  },
+		  "201": {
+			"description": "Book created",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/Book"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/books/{id}": {
+	  "get": {
+		"tags": [
+		  "book"
+		],
+		"summary": "Get book by id",
+		"operationId": "getBookById",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of book to return",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "Book record",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Book"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  },
+	  "put": {
+		"tags": [
+		  "book"
+		],
+		"summary": "Update existing book",
+		"operationId": "updateBook",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of book to update",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"requestBody": {
+		  "description": "Book object record",
+		  "content": {
+			"*/*": {
+			  "schema": {
+				"$ref": "#/components/schemas/Book"
+			  }
+			}
+		  }
+		},
+		"responses": {
+		  "200": {
+			"description": "Book updated"
+		  },
+		  "404": {
+			"description": "Book not found"
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/books/isbn/{isbn}": {
+	  "get": {
+		"tags": [
+		  "book"
+		],
+		"summary": "Get book by isbn",
+		"operationId": "getBookByIsbn",
+		"parameters": [
+		  {
+			"name": "isbn",
+			"in": "path",
+			"description": "ISBN of book to return",
+			"required": true,
+			"schema": {
+			  "type": "string"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "Book record",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Book"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/books/genre/{id}": {
+	  "get": {
+		"tags": [
+		  "book"
+		],
+		"summary": "Get books by genre ID",
+		"operationId": "getBooksByGenre",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of genre",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "Book list",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "array",
+				  "items": {
+					"$ref": "#/components/schemas/Book"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/genres": {
+	  "get": {
+		"tags": [
+		  "genre"
+		],
+		"summary": "Get all existing genres",
+		"operationId": "getGenres",
+		"responses": {
+		  "200": {
+			"description": "Genre list",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "array",
+				  "items": {
+					"$ref": "#/components/schemas/Genre"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  },
+	  "post": {
+		"tags": [
+		  "genre"
+		],
+		"summary": "Add new genre",
+		"operationId": "createGenre",
+		"requestBody": {
+		  "description": "Genre object that needs to be added to the store",
+		  "content": {
+			"application/json": {
+			  "schema": {
+				"$ref": "#/components/schemas/Genre"
+			  }
+			}
+		  }
+		},
+		"responses": {
+		  "409": {
+			"description": "Genre already exists",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/Genre"
+				}
+			  }
+			}
+		  },
+		  "201": {
+			"description": "Genre created",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/Genre"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/genres/{id}": {
+	  "get": {
+		"tags": [
+		  "genre"
+		],
+		"summary": "Get genre by id",
+		"operationId": "getGenreById",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of genre to return",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "Genre record",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Genre"
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "Genre not found",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Genre"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/genre/{id}": {
+	  "put": {
+		"tags": [
+		  "genre"
+		],
+		"summary": "Update an existing genre",
+		"operationId": "updateGenre",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of genre to update",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"requestBody": {
+		  "description": "Genre object record",
+		  "content": {
+			"*/*": {
+			  "schema": {
+				"$ref": "#/components/schemas/Genre"
+			  }
+			}
+		  }
+		},
+		"responses": {
+		  "404": {
+			"description": "Genre not found",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Genre"
+				}
+			  }
+			}
+		  },
+		  "200": {
+			"description": "Genre updated",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/Genre"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/roles": {
+	  "get": {
+		"tags": [
+		  "role"
+		],
+		"summary": "Get all existing user roles",
+		"operationId": "getRoles",
+		"responses": {
+		  "200": {
+			"description": "Genre list",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "array",
+				  "items": {
+					"$ref": "#/components/schemas/Role"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/users/registration": {
+	  "post": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Register new user",
+		"operationId": "registerUser",
+		"requestBody": {
+		  "description": "User object",
+		  "content": {
+			"application/json": {
+			  "schema": {
+				"$ref": "#/components/schemas/User"
+			  }
+			}
+		  },
+		  "required": true
+		},
+		"responses": {
+		  "201": {
+			"description": "User created",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "User role not found",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  },
+		  "409": {
+			"description": "User already exists",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"basicAuth": []
+		  }
+		]
+	  }
+	},
+	"/users/auth": {
+	  "post": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Authorize user and generate token",
+		"operationId": "authenticateUser",
+		"requestBody": {
+		  "description": "Credentials need to be provided to generate token",
+		  "content": {
+			"application/json": {
+			  "schema": {
+				"$ref": "#/components/schemas/Credentials"
+			  }
+			}
+		  }
+		},
+		"responses": {
+		  "200": {
+			"description": "Token created",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/Token"
+				}
+			  }
+			}
+		  },
+		  "401": {
+			"description": "Invalid login or password provided",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/Token"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"basicAuth": []
+		  }
+		]
+	  }
+	},
+	"/users/{id}": {
+	  "get": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Get user by ID",
+		"operationId": "getUserById",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of user to return",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "User record",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "User not found",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  },
+	  "put": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Update an existing user",
+		"operationId": "updateUser",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of user to update",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"requestBody": {
+		  "description": "User object record",
+		  "content": {
+			"*/*": {
+			  "schema": {
+				"$ref": "#/components/schemas/User"
+			  }
+			}
+		  }
+		},
+		"responses": {
+		  "200": {
+			"description": "User updated",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "User not found",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  },
+	  "delete": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Delete user by ID",
+		"operationId": "deleteUser",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of user to be deleted",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "User has been deleted"
+		  },
+		  "404": {
+			"description": "User not found"
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/users": {
+	  "get": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Get all existing users",
+		"operationId": "getUsers",
+		"responses": {
+		  "200": {
+			"description": "User records",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "array",
+				  "items": {
+					"$ref": "#/components/schemas/User"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/users/email/{email}": {
+	  "get": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Get user by email",
+		"operationId": "getUserByEmail",
+		"parameters": [
+		  {
+			"name": "email",
+			"in": "query",
+			"description": "Email of user to return",
+			"required": true,
+			"schema": {
+			  "type": "string"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "User record",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "User not found",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "$ref": "#/components/schemas/User"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/users/{id}/restore": {
+	  "put": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Restore user by ID",
+		"operationId": "restoreUser",
+		"parameters": [
+		  {
+			"name": "id",
+			"in": "path",
+			"description": "ID of user to be restored",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "User has been restored"
+		  },
+		  "404": {
+			"description": "User not found"
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/users/{user_id}/addresses": {
+	  "get": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Get addresses of user by user ID",
+		"operationId": "getAddresses",
+		"parameters": [
+		  {
+			"name": "user_id",
+			"in": "path",
+			"description": "ID of the user whose addresses to get",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "Address list",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "array",
+				  "items": {
+					"$ref": "#/components/schemas/Address"
+				  }
+				}
+			  }
+			}
+		  },
+		  "404": {
+			"description": "User not found",
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "array",
+				  "items": {
+					"$ref": "#/components/schemas/Address"
+				  }
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	},
+	"/users/{user_id}/addresses}": {
+	  "post": {
+		"tags": [
+		  "user"
+		],
+		"summary": "Add new address",
+		"operationId": "addAddress",
+		"parameters": [
+		  {
+			"name": "user_id",
+			"in": "path",
+			"description": "ID of the user to add addresses to",
+			"required": true,
+			"schema": {
+			  "type": "integer",
+			  "format": "int64"
+			}
+		  }
+		],
+		"requestBody": {
+		  "description": "Address object",
+		  "content": {
+			"application/json": {
+			  "schema": {
+				"$ref": "#/components/schemas/Address"
+			  }
+			}
+		  },
+		  "required": true
+		},
+		"responses": {
+		  "201": {
+			"description": "Address created",
+			"content": {
+			  "*/*": {
+				"schema": {
+				  "$ref": "#/components/schemas/Address"
+				}
+			  }
+			}
+		  }
+		},
+		"security": [
+		  {
+			"bearerAuth": []
+		  }
+		]
+	  }
+	}
+  },
+  "components": {
+	"schemas": {
+	  "Book": {
+		"required": [
+		  "author",
+		  "isbn",
+		  "price",
+		  "publicationYear",
+		  "quantity",
+		  "title"
+		],
+		"type": "object",
+		"properties": {
+		  "id": {
+			"type": "integer",
+			"format": "int64",
+			"readOnly": true
+		  },
+		  "isbn": {
+			"pattern": "^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$",
+			"type": "string"
+		  },
+		  "title": {
+			"type": "string"
+		  },
+		  "author": {
+			"type": "string"
+		  },
+		  "publicationYear": {
+			"type": "string"
+		  },
+		  "price": {
+			"type": "string"
+		  },
+		  "quantity": {
+			"type": "integer",
+			"format": "int32"
+		  },
+		  "genres": {
+			"type": "array",
+			"items": {
+			  "$ref": "#/components/schemas/Genre"
+			}
+		  }
+		}
+	  },
+	  "Genre": {
+		"required": [
+		  "type"
+		],
+		"type": "object",
+		"properties": {
+		  "id": {
+			"type": "integer",
+			"format": "int64",
+			"readOnly": true
+		  },
+		  "type": {
+			"type": "string"
+		  }
+		}
+	  },
+	  "Role": {
+		"type": "object",
+		"properties": {
+		  "id": {
+			"type": "integer",
+			"description": "User role ID",
+			"format": "int64",
+			"example": 2
+		  },
+		  "name": {
+			"type": "string",
+			"readOnly": true
+		  }
+		}
+	  },
+	  "User": {
+		"required": [
+		  "email"
+		],
+		"type": "object",
+		"properties": {
+		  "id": {
+			"type": "integer",
+			"format": "int64",
+			"readOnly": true
+		  },
+		  "email": {
+			"type": "string",
+			"description": "User e-mail as login",
+			"example": "user@hotmail.com"
+		  },
+		  "password": {
+			"type": "string",
+			"writeOnly": true
+		  },
+		  "enabled": {
+			"type": "boolean",
+			"readOnly": true
+		  },
+		  "roles": {
+			"type": "array",
+			"items": {
+			  "$ref": "#/components/schemas/Role"
+			}
+		  }
+		}
+	  },
+	  "Credentials": {
+		"required": [
+		  "email",
+		  "password"
+		],
+		"type": "object",
+		"properties": {
+		  "email": {
+			"type": "string",
+			"description": "User e-mail as login",
+			"example": "admin@epam.com"
+		  },
+		  "password": {
+			"type": "string",
+			"description": "User password",
+			"example": "1234"
+		  }
+		}
+	  },
+	  "Token": {
+		"type": "object",
+		"properties": {
+		  "access_token": {
+			"type": "string"
+		  }
+		}
+	  },
+	  "Address": {
+		"required": [
+		  "address_line1",
+		  "city",
+		  "country",
+		  "fullName",
+		  "postal",
+		  "region"
+		],
+		"type": "object",
+		"properties": {
+		  "id": {
+			"type": "integer",
+			"format": "int64",
+			"readOnly": true
+		  },
+		  "userId": {
+			"type": "integer",
+			"format": "int64",
+			"readOnly": true
+		  },
+		  "fullName": {
+			"type": "string"
+		  },
+		  "address_line1": {
+			"type": "string"
+		  },
+		  "address_line2": {
+			"type": "string"
+		  },
+		  "postal": {
+			"type": "string"
+		  },
+		  "city": {
+			"type": "string"
+		  },
+		  "region": {
+			"type": "string"
+		  },
+		  "country": {
+			"type": "string"
+		  }
+		}
+	  }
+	},
+	"securitySchemes": {
+	  "basicAuth": {
+		"type": "http",
+		"scheme": "basic"
+	  },
+	  "bearerAuth": {
+		"type": "http",
+		"scheme": "bearer",
+		"bearerFormat": "JWT"
+	  }
+	}
+  }
+}

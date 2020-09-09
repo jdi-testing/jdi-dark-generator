@@ -1,0 +1,2 @@
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.1/webhook-example.json
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.1/webhook-example.yaml
