@@ -1,0 +1,7 @@
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/api-with-examples.json
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/api-with-examples.yaml
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/callback-example.json
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.json
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.json
+https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/uspto.json

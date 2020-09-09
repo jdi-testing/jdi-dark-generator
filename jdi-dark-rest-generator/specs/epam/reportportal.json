@@ -1,0 +1,1564 @@
+{
+  "swagger": "2.0",
+  "info": {
+	"description": "Report Portal UAT documentation",
+	"version": "5.3.0",
+	"title": "Report Portal",
+	"contact": {
+	  "name": "Support",
+	  "email": "Support EPMC-TST Report Portal <SupportEPMC-TSTReportPortal@epam.com>"
+	},
+	"license": {
+	  "name": "Apache 2.0",
+	  "url": "http://www.apache.org/licenses/LICENSE-2.0"
+	}
+  },
+  "host": "dev.reportportal.io",
+  "basePath": "/uat/",
+  "tags": [
+	{
+	  "name": "auth-configuration-endpoint",
+	  "description": "Auth Configuration Endpoint"
+	},
+	{
+	  "name": "github-endpoint",
+	  "description": "Github Endpoint"
+	},
+	{
+	  "name": "o-auth-configuration-endpoint",
+	  "description": "O Auth Configuration Endpoint"
+	},
+	{
+	  "name": "sso-endpoint",
+	  "description": "Sso Endpoint"
+	}
+  ],
+  "paths": {
+	"/settings/auth/{authType}": {
+	  "get": {
+		"tags": [
+		  "auth-configuration-endpoint"
+		],
+		"summary": "Retrieves auth settings",
+		"operationId": "getSettingsUsingGET",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authType",
+			"in": "path",
+			"description": "authType",
+			"required": true,
+			"type": "string",
+			"enum": [
+			  "ad",
+			  "ldap",
+			  "saml"
+			]
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/AbstractAuthResource"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "post": {
+		"tags": [
+		  "auth-configuration-endpoint"
+		],
+		"summary": "Updates LDAP auth settings",
+		"operationId": "updateLdapSettingsUsingPOST",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authType",
+			"in": "path",
+			"description": "authType",
+			"required": true,
+			"type": "string",
+			"enum": [
+			  "ad",
+			  "ldap",
+			  "saml"
+			]
+		  },
+		  {
+			"in": "body",
+			"name": "request",
+			"description": "request",
+			"required": true,
+			"schema": {
+			  "$ref": "#/definitions/UpdateAuthRQ"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/AbstractAuthResource"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "put": {
+		"tags": [
+		  "auth-configuration-endpoint"
+		],
+		"summary": "Updates LDAP auth settings",
+		"operationId": "updateLdapSettingsUsingPUT",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authType",
+			"in": "path",
+			"description": "authType",
+			"required": true,
+			"type": "string",
+			"enum": [
+			  "ad",
+			  "ldap",
+			  "saml"
+			]
+		  },
+		  {
+			"in": "body",
+			"name": "request",
+			"description": "request",
+			"required": true,
+			"schema": {
+			  "$ref": "#/definitions/UpdateAuthRQ"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/AbstractAuthResource"
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	},
+	"/settings/auth/{integrationId}": {
+	  "delete": {
+		"tags": [
+		  "auth-configuration-endpoint"
+		],
+		"summary": "Retrieves auth settings",
+		"operationId": "deleteSettingsUsingDELETE",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "integrationId",
+			"in": "path",
+			"description": "integrationId",
+			"required": true,
+			"type": "integer",
+			"format": "int64"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OperationCompletionRS"
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	},
+	"/settings/oauth": {
+	  "get": {
+		"tags": [
+		  "o-auth-configuration-endpoint"
+		],
+		"summary": "Returns OAuth Server Settings",
+		"operationId": "getOAuthSettingsUsingGET_1",
+		"produces": [
+		  "*/*"
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object",
+			  "additionalProperties": {
+				"$ref": "#/definitions/OAuthRegistrationResource"
+			  }
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	},
+	"/settings/oauth/{authId}": {
+	  "get": {
+		"tags": [
+		  "o-auth-configuration-endpoint"
+		],
+		"summary": "Returns OAuth Server Settings",
+		"operationId": "getOAuthSettingsUsingGET",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authId",
+			"in": "path",
+			"description": "authId",
+			"required": true,
+			"type": "string"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OAuthRegistrationResource"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "post": {
+		"tags": [
+		  "o-auth-configuration-endpoint"
+		],
+		"summary": "Creates/Updates OAuth Integration Settings",
+		"operationId": "updateOAuthSettingsUsingPOST",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authId",
+			"in": "path",
+			"description": "authId",
+			"required": true,
+			"type": "string"
+		  },
+		  {
+			"in": "body",
+			"name": "clientRegistrationResource",
+			"description": "clientRegistrationResource",
+			"required": true,
+			"schema": {
+			  "$ref": "#/definitions/OAuthRegistrationResource"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OAuthRegistrationResource"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "put": {
+		"tags": [
+		  "o-auth-configuration-endpoint"
+		],
+		"summary": "Creates/Updates OAuth Integration Settings",
+		"operationId": "updateOAuthSettingsUsingPUT",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authId",
+			"in": "path",
+			"description": "authId",
+			"required": true,
+			"type": "string"
+		  },
+		  {
+			"in": "body",
+			"name": "clientRegistrationResource",
+			"description": "clientRegistrationResource",
+			"required": true,
+			"schema": {
+			  "$ref": "#/definitions/OAuthRegistrationResource"
+			}
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OAuthRegistrationResource"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "delete": {
+		"tags": [
+		  "o-auth-configuration-endpoint"
+		],
+		"summary": "Deletes OAuth Integration Settings",
+		"operationId": "deleteOAuthSettingUsingDELETE",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authId",
+			"in": "path",
+			"description": "authId",
+			"required": true,
+			"type": "string"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OperationCompletionRS"
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	},
+	"/sso/me": {
+	  "get": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingGET",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "head": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingHEAD",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "post": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingPOST",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "put": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingPUT",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "delete": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingDELETE",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "options": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingOPTIONS",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "patch": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingPATCH",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	},
+	"/sso/me/apitoken": {
+	  "get": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "Get api token",
+		"operationId": "getApiTokenUsingGET",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "name",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OAuth2AccessToken"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "post": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "Create api token",
+		"operationId": "createApiTokenUsingPOST",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "OAuth2Request.approved",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "OAuth2Request.authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.grantType",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.redirectUri",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.refresh",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "OAuth2Request.refreshTokenRequest.grantType",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.resourceIds",
+			"in": "query",
+			"required": false,
+			"type": "array",
+			"items": {
+			  "type": "string"
+			},
+			"collectionFormat": "multi"
+		  },
+		  {
+			"name": "OAuth2Request.responseTypes",
+			"in": "query",
+			"required": false,
+			"type": "array",
+			"items": {
+			  "type": "string"
+			},
+			"collectionFormat": "multi"
+		  },
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "clientOnly",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "name",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "userAuthentication.authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "userAuthentication.authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "userAuthentication.credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "userAuthentication.details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "userAuthentication.principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OAuth2AccessToken"
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	},
+	"/sso/me/github/synchronize": {
+	  "post": {
+		"tags": [
+		  "github-endpoint"
+		],
+		"summary": "Synchronizes logged-in GitHub user",
+		"operationId": "synchronizeUsingPOST",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "OAuth2Request.approved",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "OAuth2Request.authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.grantType",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.redirectUri",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.refresh",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "OAuth2Request.refreshTokenRequest.grantType",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "OAuth2Request.resourceIds",
+			"in": "query",
+			"required": false,
+			"type": "array",
+			"items": {
+			  "type": "string"
+			},
+			"collectionFormat": "multi"
+		  },
+		  {
+			"name": "OAuth2Request.responseTypes",
+			"in": "query",
+			"required": false,
+			"type": "array",
+			"items": {
+			  "type": "string"
+			},
+			"collectionFormat": "multi"
+		  },
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "clientOnly",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "name",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "userAuthentication.authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "userAuthentication.authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "userAuthentication.credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "userAuthentication.details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "userAuthentication.principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "$ref": "#/definitions/OperationCompletionRS"
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	},
+	"/sso/user": {
+	  "get": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingGET_1",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "head": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingHEAD_1",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "post": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingPOST_1",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "put": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingPUT_1",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "delete": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingDELETE_1",
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "options": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingOPTIONS_1",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  },
+	  "patch": {
+		"tags": [
+		  "sso-endpoint"
+		],
+		"summary": "user",
+		"operationId": "userUsingPATCH_1",
+		"consumes": [
+		  "application/json"
+		],
+		"produces": [
+		  "*/*"
+		],
+		"parameters": [
+		  {
+			"name": "authenticated",
+			"in": "query",
+			"required": false,
+			"type": "boolean"
+		  },
+		  {
+			"name": "authorities[0].authority",
+			"in": "query",
+			"required": false,
+			"type": "string"
+		  },
+		  {
+			"name": "credentials",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "details",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  },
+		  {
+			"name": "principal",
+			"in": "query",
+			"required": false,
+			"type": "object"
+		  }
+		],
+		"responses": {
+		  "200": {
+			"description": "OK",
+			"schema": {
+			  "type": "object"
+			}
+		  }
+		},
+		"deprecated": false
+	  }
+	}
+  },
+  "definitions": {
+	"AbstractAuthResource": {
+	  "type": "object",
+	  "properties": {
+		"type": {
+		  "type": "string"
+		}
+	  },
+	  "title": "AbstractAuthResource"
+	},
+	"OAuth2AccessToken": {
+	  "type": "object",
+	  "properties": {
+		"additionalInformation": {
+		  "type": "object"
+		},
+		"expiration": {
+		  "type": "string",
+		  "format": "date-time"
+		},
+		"expired": {
+		  "type": "boolean"
+		},
+		"expiresIn": {
+		  "type": "integer",
+		  "format": "int32"
+		},
+		"refreshToken": {
+		  "$ref": "#/definitions/OAuth2RefreshToken"
+		},
+		"scope": {
+		  "type": "array",
+		  "items": {
+			"type": "string"
+		  }
+		},
+		"tokenType": {
+		  "type": "string"
+		},
+		"value": {
+		  "type": "string"
+		}
+	  },
+	  "title": "OAuth2AccessToken"
+	},
+	"OAuth2RefreshToken": {
+	  "type": "object",
+	  "title": "OAuth2RefreshToken"
+	},
+	"OAuthRegistrationResource": {
+	  "type": "object",
+	  "properties": {
+		"authGrantType": {
+		  "type": "string"
+		},
+		"authorizationUri": {
+		  "type": "string"
+		},
+		"clientAuthMethod": {
+		  "type": "string"
+		},
+		"clientId": {
+		  "type": "string"
+		},
+		"clientName": {
+		  "type": "string"
+		},
+		"clientSecret": {
+		  "type": "string"
+		},
+		"id": {
+		  "type": "string"
+		},
+		"jwkSetUri": {
+		  "type": "string"
+		},
+		"redirectUrlTemplate": {
+		  "type": "string"
+		},
+		"restrictions": {
+		  "type": "object",
+		  "additionalProperties": {
+			"type": "string"
+		  }
+		},
+		"scopes": {
+		  "type": "array",
+		  "items": {
+			"type": "string"
+		  }
+		},
+		"tokenUri": {
+		  "type": "string"
+		},
+		"userInfoEndpointNameAttribute": {
+		  "type": "string"
+		},
+		"userInfoEndpointUri": {
+		  "type": "string"
+		}
+	  },
+	  "title": "OAuthRegistrationResource"
+	},
+	"OperationCompletionRS": {
+	  "type": "object",
+	  "properties": {
+		"message": {
+		  "type": "string"
+		}
+	  },
+	  "title": "OperationCompletionRS"
+	},
+	"UpdateAuthRQ": {
+	  "type": "object",
+	  "properties": {
+		"enabled": {
+		  "type": "boolean"
+		},
+		"integrationParameters": {
+		  "type": "object"
+		}
+	  },
+	  "title": "UpdateAuthRQ"
+	}
+  }
+}
