@@ -82,7 +82,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.epam.jdi.generator.SwaggerCodegenJDI</mainClass>
+                            <mainClass>com.epam.jdi.generator.v2.SwaggerCodegenJDI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
