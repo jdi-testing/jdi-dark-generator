@@ -94,16 +94,6 @@
             <artifactId>swagger-codegen-cli</artifactId>
             <version>2.4.12</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-generator -->
-        <!--        <dependency>-->
-        <!--            <groupId>io.swagger.codegen.v3</groupId>-->
-        <!--            <artifactId>swagger-generator</artifactId>-->
-        <!--            <version>3.0.21</version>-->
-        <!--        </dependency>-->
-        <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen-project -->
-        
-
         
 
     </dependencies>

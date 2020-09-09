@@ -32,7 +32,7 @@ import {{import}};
 @Data
 @Accessors(chain = true)
 {{#models}}
-	{{#model}}
-		{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>pojo}}{{/isEnum}}
-	{{/model}}
+{{#model}}
+{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>pojo}}{{/isEnum}}
+{{/model}}
 {{/models}}
