@@ -65,7 +65,6 @@ private String groupId;
 private String artifactId;
 private String artifactVersion;
 private String ignoreFileOverride;
-private boolean resolveFully;
 private String serializationLibrary;
 private String dateLibrary;
 
@@ -227,7 +226,7 @@ public ClientOptInput toClientOptInput() {
     cnfg.setInputURL(inputSpecURL);
     ParseOptions options = new ParseOptions();
     options.setResolve(true);
-    options.setResolveFully(resolveFully);
+    options.setResolveFully(false);
     options.setFlatten(true);
     options.setFlattenComposedSchemas(flattenInlineSchema);
     SwaggerParseResult result = new OpenAPIParser().readLocation(inputSpecURL, authorizationValues, options);

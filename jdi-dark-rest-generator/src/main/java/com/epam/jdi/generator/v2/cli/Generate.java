@@ -126,12 +126,8 @@ private Boolean skipAliasGeneration;
 @Option(name = {"--ignore-import-mapping"}, title = "ignore import mapping", description = "allow generate model classes using names previously listed on import mappings.")
 private String ignoreImportMappings;
 
-
 @Option(name = {"--disable-examples"}, title = "disable-examples", description = "disable examples")
 private Boolean disableExamples;
-
-@Option(name = {"--resolve-fully"}, title = "resolve fully", description = "resolve fully")
-private Boolean resolveFully;
 
 @Option(name = {"--flatten-inline-schema"}, title = "flattenInlineSchema", description = "flattenInlineSchema")
 private Boolean flattenInlineSchema;
@@ -141,8 +137,6 @@ private List<CodegenArgument> codegenArguments;
 
 @Option(name = {"--use-oas2"}, title = "use Swagger v2", description = USE_OAS2_DESC)
 private Boolean useOas2;
-
-
 
 @Option(name = {"-D"}, title = "system properties", description = "sets specified system properties in the format of name=value,name=value (or multiple options, each with name=value)")
 private final List<String> systemProperties = new ArrayList<>();
@@ -312,10 +306,5 @@ private void overrideConfigWithCLIArguments(CodegenConfiguratorJDI configurator)
     if (ignoreImportMappings != null) {
         additionalProperties.add(String.format("%s=%s", CodegenConstants.IGNORE_IMPORT_MAPPING_OPTION, Boolean.parseBoolean(ignoreImportMappings)));
     }
-    
-    if (resolveFully != null) {
-        configurator.setResolveFully(resolveFully);
-    }
-    
 }
 }
