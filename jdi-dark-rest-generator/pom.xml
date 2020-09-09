@@ -13,8 +13,8 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <log4j2.version>2.11.1</log4j2.version>
-        <logback.version>1.3.0-alpha5</logback.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <logback.version>1.2.3</logback.version>
         <rest.assured.version>4.3.1</rest.assured.version>
         <airline.version>0.9</airline.version>
         <lombok.version>1.18.12</lombok.version>
@@ -24,13 +24,7 @@
     </properties>
     
     <dependencies>
-    
-        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen -->
         <dependency>
             <groupId>io.swagger.codegen.v3</groupId>
@@ -43,13 +37,6 @@
             <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-generators</artifactId>
             <version>${swagger.generators.v3.version}</version>
-        </dependency>
-    
-        <!-- https://mvnrepository.com/artifact/io.swagger.codegen.v3/swagger-codegen-cli -->
-        <dependency>
-            <groupId>io.swagger.codegen.v3</groupId>
-            <artifactId>swagger-codegen-cli</artifactId>
-            <version>3.0.21</version>
         </dependency>
     
         <dependency>
@@ -70,32 +57,19 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-        
-        
+    
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>openapi-generator-cli</artifactId>
-            <version>4.3.1</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>openapi-generator</artifactId>
-            <version>4.3.1</version>
-        </dependency>
- 
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-codegen</artifactId>
-            <version>2.4.15</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/io.swagger/swagger-codegen-cli -->
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-codegen-cli</artifactId>
-            <version>2.4.12</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         
-
     </dependencies>
     
     <build>
