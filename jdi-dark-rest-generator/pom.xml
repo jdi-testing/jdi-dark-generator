@@ -7,7 +7,7 @@
     
     <groupId>com.epam.jdi</groupId>
     <artifactId>jdi-dark-rest-generator</artifactId>
-    <version>0.1</version>
+    <version>2.0</version>
     <name>JDI Dark REST Generator</name>
     <packaging>jar</packaging>
     
