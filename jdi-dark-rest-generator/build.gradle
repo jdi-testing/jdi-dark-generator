@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.wrapper.Wrapper
+
 buildscript {
     ext {
         gradleLombokVersion = '3.2.0'
@@ -18,10 +20,12 @@ plugins {
 
 
 group = 'com.epam.jdi'
-version = '0.1'
+version = '2.0'
 description = 'JDI Dark REST Generator'
 sourceCompatibility = '1.8'
 targetCompatibility = 1.8
+
+
 repositories {
     jcenter()
     mavenCentral()
@@ -37,11 +41,12 @@ idea {
     }
 }
 
-
+/*
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
     gradleVersion = "6.6.1"
 }
+*/
 
 //New gradle 6 feature. won't work with lower gradle version
 java {
