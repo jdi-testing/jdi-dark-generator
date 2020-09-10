@@ -152,12 +152,6 @@
                         <argument>-c</argument>>
                         <argument>src/main/resources/config.json</argument>>
                     </arguments>
-                    <systemProperties>
-<!--                        <systemProperty>-->
-<!--                            <key>myproperty</key>-->
-<!--                            <value>myvalue</value>-->
-<!--                        </systemProperty>-->
-                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>
@@ -196,7 +190,7 @@
                     <execution>
                         <phase>verify</phase>
                         <goals>
-                            <goal>package</goal>
+                            <goal>generate</goal>
                         </goals>
                     </execution>
                 </executions>
