@@ -18,7 +18,7 @@ If you don't have maven installed, you may directly use the included maven wrapp
 
 - `generate`
 
-  Generate JDI annotated classes from Open API (Swagger) specification
+  Generate JDI annotated classes from Open API/Swagger specification
 
 - `help`
 

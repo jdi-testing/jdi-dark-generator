@@ -19,7 +19,7 @@ import static io.swagger.codegen.v3.CodegenConstants.*;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
-@Command(name = "generate", description = "Generate JDI annotated classes from Open API (Swagger) specification")
+@Command(name = "generate", description = "Generate JDI annotated classes from Open API/Swagger specification")
 public class Generate implements Runnable {
 
 @Option(name = {"-D"}, title = "system properties", description = "sets specified system properties in the format of name=value,name=value (or multiple options, each with name=value)")
