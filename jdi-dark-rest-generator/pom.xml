@@ -16,7 +16,7 @@
         <slf4j.version>1.7.30</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <rest.assured.version>4.3.1</rest.assured.version>
-        <airline.version>0.9</airline.version>
+        <airline.version>2.8.0</airline.version>
         <lombok.version>1.18.12</lombok.version>
         <swagger.codegen.v3.version>3.0.21</swagger.codegen.v3.version>
         <rest.assured.version>4.3.1</rest.assured.version>
@@ -45,12 +45,12 @@
             <version>${rest.assured.version}</version>
             <scope>compile</scope>
         </dependency>
-    
         <dependency>
-            <groupId>io.airlift</groupId>
+            <groupId>com.github.rvesse</groupId>
             <artifactId>airline</artifactId>
             <version>${airline.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -169,6 +169,34 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+    
+            <plugin>
+                <groupId>com.github.rvesse</groupId>
+                <artifactId>airline-maven-plugin</artifactId>
+                <version>${airline.version}</version>
+                <configuration>
+                    <formats>
+                        <format>MAN</format>
+                        <format>CLI</format>
+                        <format>MARKDOWN</format>
+                    </formats>
+                    <sources>
+                        <source>
+                            <classes>
+                                <class>com.epam.jdi.generator.v2.SwaggerCodegenJDI</class>
+                            </classes>
+                        </source>
+                    </sources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>package</goal>
                         </goals>
                     </execution>
                 </executions>
