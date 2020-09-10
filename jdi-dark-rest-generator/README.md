@@ -1,6 +1,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/33945d791ef14f41ae05740328d7bdb9)](https://www.codacy.com/app/jdi-testing/jdi-dark?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jdi-testing/jdi-dark&amp;utm_campaign=Badge_Grade)
 
-# JDI Dark Generator
+# JDI Dark Rest Generator
 
 ## Building
 After cloning the project, you can build it from the source with this command:
@@ -10,11 +10,14 @@ If you don't have maven installed, you may directly use the included maven wrapp
 
 ./mvnw clean package
 
-# SYNOPSIS
+## Execution
 
 `java -jar DarkGenerator.jar` *command* [ *command-args* ]
 
-# COMMANDS
+`java -jar DarkGenerator.jar` `generate` - Generate JDI annotated classes from
+Open API (Swagger) specification
+
+### COMMANDS
 
 - `generate`
 
@@ -24,14 +27,10 @@ If you don't have maven installed, you may directly use the included maven wrapp
 
   Display help information
 
----
 
-# NAME
+#### GENERATE
 
-`java -jar DarkGenerator.jar` `generate` - Generate JDI annotated classes from
-Open API (Swagger) specification
-
-# SYNOPSIS
+##### SYNOPSIS
 
 `java -jar DarkGenerator.jar` `generate` [ { `-a` | `--auth` } *authorization*
 ] [ `--additional-properties` *additional properties* *...* ] [ `--api-package`
@@ -57,7 +56,9 @@ mappings* *...* ] [ { `-s` | `--skip-overwrite` } ] [ `--serialization-library`
 engine* ] [ `--type-mappings` *type mappings* *...* ] [ `--use-oas2` ] [ { `-v`
 | `--verbose` } ]
 
-# OPTIONS
+##### OPTIONS
+
+It is obligatory to specify input specification either as command line option or in supplied config file. Other options are not required and have reasonable defaults.
 
 - `-a` *authorization* , `--auth` *authorization*
 
@@ -249,16 +250,21 @@ engine* ] [ `--type-mappings` *type mappings* *...* ] [ `--use-oas2` ] [ { `-v`
   verbose mode
 
 ---
+##### Example
 
-# NAME
+To generate jdi-dark project for https://petstore.swagger.io/v2/swagger.json, run following:
+
+java -jar target/DarkGenerator.jar generate -i https://petstore.swagger.io/v2/swagger.json -o ../sample -p com.petshop
+
+#### HELP
 
 `java -jar DarkGenerator.jar` `help` - Display help information
 
-# SYNOPSIS
+##### SYNOPSIS
 
 `java -jar DarkGenerator.jar` `help` [ `--` ] [ *command* ]
 
-# OPTIONS
+##### OPTIONS
 
 - `--`
 
@@ -267,12 +273,6 @@ engine* ] [ `--type-mappings` *type mappings* *...* ] [ `--use-oas2` ] [ { `-v`
 
 - *command*
 
-
-## Generating
-
-To generate jdi-dark project for https://petstore.swagger.io/v2/swagger.json, run following:
-
-java -jar target/DarkGenerator.jar generate -i https://petstore.swagger.io/v2/swagger.json -o ../sample -p com.petshop
 
                 
 ## Documentation
